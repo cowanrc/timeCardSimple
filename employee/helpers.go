@@ -28,7 +28,6 @@ func employeeClockOut(id int) {
 	employee := TimeCard[id]
 	employee.ClockOut = time.Now().UTC().Format("Mon Jan _2 15:04:05 MST 2006")
 	log.Printf("Employee clocked out at: %s", employee.ClockOut)
-	employeeTotalTime(id)
 }
 
 func employeeExists(ID int) bool {
@@ -36,13 +35,11 @@ func employeeExists(ID int) bool {
 	return ok
 }
 
-func employeeTotalTime(id int) {
-	employee := TimeCard[id]
-	clockIn, _ := time.Parse("Mon Jan _2 15:04:05 MST 2006", employee.ClockIn)
-	clockOut, _ := time.Parse("Mon Jan _2 15:04:05 MST 2006", employee.ClockOut)
-	employee.TotalTime = roundDuration(clockOut.Sub(clockIn))
-
-	log.Printf("Employee: %s worked for a total of: %v", employee.Name, employee.TotalTime)
+func employeeTotalTime(clockIn string, clockOut string) string {
+	clockInTime, _ := time.Parse("Mon Jan _2 15:04:05 MST 2006", clockIn)
+	clockOutTime, _ := time.Parse("Mon Jan _2 15:04:05 MST 2006", clockOut)
+	totalTime := roundDuration(clockOutTime.Sub(clockInTime))
+	return totalTime
 }
 
 func roundDuration(d time.Duration) string {
