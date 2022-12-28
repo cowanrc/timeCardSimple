@@ -16,11 +16,12 @@ func main() {
 
 	//routes
 	e.POST("/employees", employee.CreateEmployeeHandler)
-	e.GET("/employees", employee.GetAllEmployeeHandler)
+	e.GET("/employees", employee.GetAllEmployeesHandler)
 	e.GET("/employees/:id", employee.GetEmployeeHandler)
-	e.POST("/employees/ClockIn/:id", employee.ClockInHandler)
-	e.POST("/employees/ClockOut/:id", employee.ClockOutHandler)
 	e.DELETE("/employees/:id", employee.DeleteEmployeeHandler)
+
+	e.PATCH("/employees/ClockIn/:id", employee.ClockInHandler)
+	e.POST("/employees/ClockOut/:id", employee.ClockOutHandler)
 
 	log.Printf("listening on port 8080")
 	e.Logger.Fatal((e.Start(":8080")))
