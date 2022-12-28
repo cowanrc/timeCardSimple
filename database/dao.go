@@ -7,11 +7,14 @@ import (
 
 const (
 	//Should probably have employees, then ClockIn/ClockOut as seperate Structs
-	queryInsertEmployee = "INSERT INTO timecard(name, dob) VALUES(?, ?);"
-	queryGetEmployees   = "SELECT employeeID, name, dob FROM timecard;"
-	queryGetEmployee    = "SELECT employeeID, name, dob FROM timecard WHERE employeeID=?;"
-	queryDeleteEmployee = "DELETE FROM timecard WHERE employeeID=?;"
-	queryClockIn        = "UPDATE timecard SET clockIn=? WHERE employeeID=?;"
+	queryInsertEmployee      = "INSERT INTO timecard(name, dob) VALUES(?, ?);"
+	queryGetEmployees        = "SELECT employeeID, name, dob FROM timecard;"
+	queryGetEmployee         = "SELECT employeeID, name, dob FROM timecard WHERE employeeID=?;"
+	queryDeleteEmployee      = "DELETE FROM timecard WHERE employeeID=?;"
+	queryClockIn             = "UPDATE timecard SET clockIn=? WHERE employeeID=?;"
+	queryClockOut            = "UPDATE timecard SET clockOut=? WHERE employeeID=?;"
+	queryTotalTime           = "UPDATE timecard SET totalTime=? WHERE employeeID=?;"
+	queryGetEmployeeTimecard = "SELECT employeeID, name, clockIn, clockOut, totalTime WHERE employeeID=?"
 )
 
 func (employee *Employee) Save() *errors.RestErr {
@@ -115,7 +118,7 @@ func (employee *Employee) Delete() *errors.RestErr {
 func (employee *Employee) EmployeeClockIn() *errors.RestErr {
 	stmt, err := Client.Prepare(queryClockIn)
 	if err != nil {
-		logger.Error("error when trying to prepare clockIN employee statement", err)
+		logger.Error("error when trying to prepare clockIn employee statement", err)
 		return errors.NewInternalServerError("database error")
 	}
 	defer stmt.Close()
@@ -123,6 +126,58 @@ func (employee *Employee) EmployeeClockIn() *errors.RestErr {
 	_, err = stmt.Exec(employee.ClockIn, employee.EmployeeID)
 	if err != nil {
 		logger.Error("error when trying to clockIn employee", err)
+		return errors.NewInternalServerError("database error")
+	}
+
+	return nil
+}
+
+func (employee *Employee) EmployeeClockOut() *errors.RestErr {
+	stmt, err := Client.Prepare(queryClockOut)
+	if err != nil {
+		logger.Error("error when trying to prepare clockOut employee statement", err)
+		return errors.NewInternalServerError("database error")
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(employee.ClockOut, employee.EmployeeID)
+	if err != nil {
+		logger.Error("error when trying to clockOut employee", err)
+		return errors.NewInternalServerError("database error")
+	}
+
+	return nil
+}
+
+func (employee *Employee) EmployeeTotalTime() *errors.RestErr {
+	stmt, err := Client.Prepare(queryClockOut)
+	if err != nil {
+		logger.Error("error when trying to prepare totalTime employee statement", err)
+		return errors.NewInternalServerError("database error")
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(employee.TotalTime, employee.EmployeeID)
+	if err != nil {
+		logger.Error("error when trying to insert total time of employee", err)
+		return errors.NewInternalServerError("database error")
+	}
+
+	return nil
+}
+
+func (employee *Employee) GetTime() *errors.RestErr {
+	stmt, err := Client.Prepare(queryGetEmployee)
+	if err != nil {
+		logger.Error("error when trying to prepare get employee time card statement", err)
+		return errors.NewInternalServerError("database error")
+	}
+
+	defer stmt.Close()
+
+	result := stmt.QueryRow(employee.EmployeeID)
+	if getErr := result.Scan(&employee.EmployeeID, &employee.Name, &employee.ClockIn, &employee.ClockOut, &employee.TotalTime); getErr != nil {
+		logger.Error("error when trying to get employee time card by ID", getErr)
 		return errors.NewInternalServerError("database error")
 	}
 

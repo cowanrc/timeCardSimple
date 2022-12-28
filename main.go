@@ -21,7 +21,7 @@ func main() {
 	e.DELETE("/employees/:id", employee.DeleteEmployeeHandler)
 
 	e.PATCH("/employees/ClockIn/:id", employee.ClockInHandler)
-	e.POST("/employees/ClockOut/:id", employee.ClockOutHandler)
+	e.PATCH("/employees/ClockOut/:id", employee.ClockOutHandler)
 
 	log.Printf("listening on port 8080")
 	e.Logger.Fatal((e.Start(":8080")))

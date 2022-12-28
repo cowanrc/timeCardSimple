@@ -1,9 +1,7 @@
 package employee
 
 import (
-	"log"
 	"net/http"
-	"strconv"
 	"timeCardSimple/database"
 	"timeCardSimple/errors"
 
@@ -136,33 +134,50 @@ func ClockInHandler(ctx echo.Context) error {
 }
 
 func ClockOutHandler(ctx echo.Context) error {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	employee := TimeCard[id]
+	// id, err := strconv.Atoi(ctx.Param("id"))
+	// employee := TimeCard[id]
 
+	// if err != nil {
+	// 	log.Printf("User must provide integer")
+	// 	return echo.NewHTTPError(http.StatusBadRequest, "User must provide an integer for an ID")
+	// }
+
+	// if !employeeExists(id) {
+	// 	log.Printf("Employee ID: %d does not exist in our system. Either this employee has been removed or has yet to be added.", id)
+	// 	return echo.NewHTTPError(http.StatusNotFound, "Employee ID: "+strconv.Itoa(id)+" does not exist in our system. Either this employee has been removed or has yet to be added.")
+	// }
+
+	// if employee.ClockIn == "" {
+	// 	return echo.NewHTTPError(http.StatusBadRequest, "User must first clock in before they can clock out.")
+	// } else if employee.ClockOut != "" {
+	// 	return echo.NewHTTPError(http.StatusBadRequest, "You cannot clock out multiple times. Without Clocking in again first")
+	// }
+
+	// employeeClockOut(id)
+
+	// m := map[string]string{
+	// 	"name":       employee.Name,
+	// 	"employeeID": strconv.Itoa(id),
+	// 	"clockIn":    employee.ClockIn,
+	// 	"clockOut":   employee.ClockOut,
+	// }
+
+	// return ctx.JSON(http.StatusAccepted, m)
+
+	employeeId, idErr := getEmployeeId(ctx.Param("id"))
+	if idErr != nil {
+		ctx.JSON(idErr.Status, idErr)
+		return echo.ErrNotFound
+	}
+
+	var employee database.Employee
+	employee.EmployeeID = employeeId
+
+	result, err := EmployeeService.ClockOutEmployee(employee)
 	if err != nil {
-		log.Printf("User must provide integer")
-		return echo.NewHTTPError(http.StatusBadRequest, "User must provide an integer for an ID")
+		ctx.JSON(err.Status, err)
+		return echo.ErrBadRequest
 	}
 
-	if !employeeExists(id) {
-		log.Printf("Employee ID: %d does not exist in our system. Either this employee has been removed or has yet to be added.", id)
-		return echo.NewHTTPError(http.StatusNotFound, "Employee ID: "+strconv.Itoa(id)+" does not exist in our system. Either this employee has been removed or has yet to be added.")
-	}
-
-	if employee.ClockIn == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "User must first clock in before they can clock out.")
-	} else if employee.ClockOut != "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "You cannot clock out multiple times. Without Clocking in again first")
-	}
-
-	employeeClockOut(id)
-
-	m := map[string]string{
-		"name":       employee.Name,
-		"employeeID": strconv.Itoa(id),
-		"clockIn":    employee.ClockIn,
-		"clockOut":   employee.ClockOut,
-	}
-
-	return ctx.JSON(http.StatusAccepted, m)
+	return ctx.JSON(http.StatusOK, result)
 }
