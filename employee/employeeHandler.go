@@ -26,7 +26,6 @@ type Employee struct {
 }
 
 var TimeCard = make(map[int]*Employee)
-var seq = 1
 
 // CreateEmployeeHandler to enter name and DOB and get an employee ID in return
 func CreateEmployeeHandler(ctx echo.Context) error {
@@ -74,81 +73,66 @@ func CreateEmployeeHandler(ctx echo.Context) error {
 
 }
 
-func GetEmployeeHandler(ctx echo.Context) error {
-	id, err := strconv.Atoi(ctx.Param("id"))
-
-	if err != nil {
-		log.Printf("User must provide integer")
-		return echo.NewHTTPError(http.StatusBadRequest, "User must provide an integer for an ID")
+func GetAllEmployeesHandler(ctx echo.Context) error {
+	employees, getErr := EmployeeService.GetAllEmployees()
+	if getErr != nil {
+		ctx.JSON(getErr.Status, getErr)
+		return nil
 	}
 
-	if !employeeExists(id) {
-		log.Printf("Employee ID: %d does not exist in our system. Either this employee has been removed or has yet to be added.", id)
-		return echo.NewHTTPError(http.StatusNotFound, "Employee ID: "+strconv.Itoa(id)+" does not exist in our system. Either this employee has been removed or has yet to be added.")
-	}
-
-	log.Printf("Getting timecard information for employee: %s", TimeCard[id].Name)
-	return ctx.JSON(http.StatusOK, TimeCard[id])
+	return ctx.JSON(http.StatusOK, employees)
 }
 
-func GetAllEmployeeHandler(ctx echo.Context) error {
-	allEmployees := make([]Employee, 0)
-
-	for _, e := range TimeCard {
-		allEmployees = append(allEmployees, Employee{e.Name, e.EmployeeID, e.ClockIn, e.ClockOut, e.TotalTime, e.DateOfBirth})
+func GetEmployeeHandler(ctx echo.Context) error {
+	employeeId, idErr := getEmployeeId(ctx.Param("id"))
+	if idErr != nil {
+		ctx.JSON(idErr.Status, idErr)
+		return echo.ErrNotFound
 	}
 
-	return ctx.JSON(http.StatusOK, allEmployees)
+	employee, getErr := EmployeeService.GetEmployee(employeeId)
+	if getErr != nil {
+		ctx.JSON(getErr.Status, getErr)
+		return nil
+	}
+
+	return ctx.JSON(http.StatusOK, employee)
+
 }
 
 func DeleteEmployeeHandler(ctx echo.Context) error {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		log.Printf("User must provide integer")
-		return echo.NewHTTPError(http.StatusBadRequest, "User must provide an integer for an ID")
+
+	employeeId, idErr := getEmployeeId(ctx.Param("id"))
+	if idErr != nil {
+		ctx.JSON(idErr.Status, idErr)
+		return echo.ErrNotFound
 	}
 
-	if !employeeExists(id) {
-		log.Printf("Employee ID: %d does not exist in our system. Either this employee has been removed or has yet to be added.", id)
-		return echo.NewHTTPError(http.StatusNotFound, "Employee ID: "+strconv.Itoa(id)+" does not exist in our system. Either this employee has been removed or has yet to be added.")
+	if err := EmployeeService.DeleteEmployee(employeeId); err != nil {
+		ctx.JSON(err.Status, err)
+		return echo.ErrBadRequest
 	}
 
-	log.Printf("Removing employee: %d from database.", TimeCard[id].EmployeeID)
-	delete(TimeCard, id)
-
-	return ctx.NoContent(http.StatusNoContent)
+	return ctx.JSON(http.StatusOK, map[string]string{"status": "deleted"})
 }
 
 func ClockInHandler(ctx echo.Context) error {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	employee := TimeCard[id]
+	employeeId, idErr := getEmployeeId(ctx.Param("id"))
+	if idErr != nil {
+		ctx.JSON(idErr.Status, idErr)
+		return echo.ErrNotFound
+	}
 
+	var employee database.Employee
+	employee.EmployeeID = employeeId
+
+	result, err := EmployeeService.ClockInEmployee(employee)
 	if err != nil {
-		log.Printf("User must provide integer")
-		return echo.NewHTTPError(http.StatusBadRequest, "User must provide an integer for an ID")
+		ctx.JSON(err.Status, err)
+		return echo.ErrBadRequest
 	}
 
-	if !employeeExists(id) {
-		log.Printf("Employee ID: %d does not exist in our system. Either this employee has been removed or has yet to be added.", id)
-		return echo.NewHTTPError(http.StatusNotFound, "Employee ID: "+strconv.Itoa(id)+" does not exist in our system. Either this employee has been removed or has yet to be added.")
-	}
-
-	log.Printf("Employee name is : %s", TimeCard[id].Name)
-
-	if employee.ClockIn != "" && employee.ClockOut == "" {
-		log.Printf("User attempted to clock in multiple times without clocking out")
-		return echo.NewHTTPError(http.StatusBadRequest, "User cannot clock in multiple times before clocking out once.")
-	}
-
-	employeeClockIn(id)
-
-	m := map[string]string{
-		"name":       employee.Name,
-		"employeeID": strconv.Itoa(id),
-		"clockIn":    employee.ClockIn,
-	}
-
-	return ctx.JSON(http.StatusAccepted, m)
+	return ctx.JSON(http.StatusOK, result)
 }
 
 func ClockOutHandler(ctx echo.Context) error {

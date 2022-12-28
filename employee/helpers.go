@@ -3,8 +3,20 @@ package employee
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
+	"timeCardSimple/errors"
 )
+
+func getEmployeeId(employeeIdParam string) (int64, *errors.RestErr) {
+	employeeId, empErr := strconv.ParseInt(employeeIdParam, 10, 64)
+
+	if empErr != nil {
+		return 0, errors.NewBadRequestError("user id should be an integer")
+	}
+
+	return employeeId, nil
+}
 
 func employeeClockIn(id int) {
 	employee := TimeCard[id]

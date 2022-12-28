@@ -8,9 +8,10 @@ import (
 const (
 	//Should probably have employees, then ClockIn/ClockOut as seperate Structs
 	queryInsertEmployee = "INSERT INTO timecard(name, dob) VALUES(?, ?);"
-	queryGetEmployees   = "SELECT * FROM timecard;"
-	queryGetEmployee    = "SELECT id, name, dob FROM timecard WHERE id=?;"
-	queryDeleteEmployee = "DELETE FROM timecard WHERE id=?;"
+	queryGetEmployees   = "SELECT employeeID, name, dob FROM timecard;"
+	queryGetEmployee    = "SELECT employeeID, name, dob FROM timecard WHERE employeeID=?;"
+	queryDeleteEmployee = "DELETE FROM timecard WHERE employeeID=?;"
+	queryClockIn        = "UPDATE timecard SET clockIn=? WHERE employeeID=?;"
 )
 
 func (employee *Employee) Save() *errors.RestErr {
@@ -20,6 +21,10 @@ func (employee *Employee) Save() *errors.RestErr {
 		return errors.NewInternalServerError("database error")
 	}
 	defer stmt.Close()
+
+	if employee.Name == "" || employee.DateOfBirth == "" {
+		return errors.NewBadRequestError("Name or DoB cannot be nil")
+	}
 
 	insertResult, saveErr := stmt.Exec(employee.Name, employee.DateOfBirth)
 	if saveErr != nil {
@@ -102,6 +107,23 @@ func (employee *Employee) Delete() *errors.RestErr {
 	if _, err := stmt.Exec(employee.EmployeeID); err != nil {
 		logger.Error("error when trying to get user from database", err)
 		return errors.NewNotFoundError("Employee does not exist")
+	}
+
+	return nil
+}
+
+func (employee *Employee) EmployeeClockIn() *errors.RestErr {
+	stmt, err := Client.Prepare(queryClockIn)
+	if err != nil {
+		logger.Error("error when trying to prepare clockIN employee statement", err)
+		return errors.NewInternalServerError("database error")
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(employee.ClockIn, employee.EmployeeID)
+	if err != nil {
+		logger.Error("error when trying to clockIn employee", err)
+		return errors.NewInternalServerError("database error")
 	}
 
 	return nil
