@@ -1,9 +1,7 @@
-package employee
+package employees
 
 import (
 	"fmt"
-	"log"
-	"time"
 	"timeCardSimple/database"
 	"timeCardSimple/errors"
 )
@@ -19,8 +17,6 @@ type employeesServiceInterface interface {
 	GetAllEmployees() (database.Employees, *errors.RestErr)
 	GetEmployee(int64) (*database.Employee, *errors.RestErr)
 	DeleteEmployee(int64) *errors.RestErr
-	ClockInEmployee(database.Employee) (*database.Employee, *errors.RestErr)
-	ClockOutEmployee(database.Employee) (*database.Employee, *errors.RestErr)
 }
 
 func (s *employeesService) CreateEmployee(employee database.Employee) (*database.Employee, *errors.RestErr) {
@@ -55,39 +51,4 @@ func (s *employeesService) DeleteEmployee(employeeId int64) *errors.RestErr {
 	}
 
 	return employee.Delete()
-}
-
-func (s *employeesService) ClockInEmployee(employee database.Employee) (*database.Employee, *errors.RestErr) {
-	current := &database.Employee{EmployeeID: employee.EmployeeID}
-	if err := current.Get(); err != nil {
-		return nil, err
-	}
-
-	current.ClockIn = time.Now().UTC().Format("Mon Jan _2 15:04:05 MST 2006")
-	log.Printf("Employee clocked in at: %s", current.ClockIn)
-
-	if err := current.EmployeeClockIn(); err != nil {
-		return nil, err
-	}
-
-	return current, nil
-}
-
-func (s *employeesService) ClockOutEmployee(employee database.Employee) (*database.Employee, *errors.RestErr) {
-	current := &database.Employee{EmployeeID: employee.EmployeeID}
-	if err := current.Get(); err != nil {
-		return nil, err
-	}
-
-	current.ClockOut = time.Now().UTC().Format("Mon Jan _2 15:04:05 MST 2006")
-	log.Printf("Employee clocked out at: %s", current.ClockOut)
-
-	if err := current.EmployeeClockOut(); err != nil {
-		return nil, err
-	}
-
-	// current.TotalTime = employeeTotalTime(current.ClockIn, current.ClockOut)
-	// log.Printf("Employee: %s worked for a total of: %v", current.Name, current.TotalTime)
-
-	return current, nil
 }
