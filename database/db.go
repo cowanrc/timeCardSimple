@@ -30,8 +30,6 @@ func init() {
 		username, password, host, schema,
 	)
 
-	log.Println(username, password, host, schema)
-
 	var err error
 	Client, err = sql.Open("mysql", dataSourceName)
 	if err != nil {
