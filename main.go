@@ -2,7 +2,8 @@ package main
 
 import (
 	"log"
-	"timeCardSimple/employee"
+	"timeCardSimple/api/employees"
+	"timeCardSimple/api/timeCard"
 
 	"github.com/labstack/echo/v4"
 )
@@ -11,17 +12,20 @@ func main() {
 	log.Printf("Creating your time card application")
 	e := echo.New()
 
-	e.File("/explorer", "ui/index.html")
-	e.Static("/explorer", "ui")
+	// e.File("/explorer", "ui/index.html")
+	// e.Static("/explorer", "ui")
+	e.Static("/swaggerui", "cmd/api/swaggerui")
 
 	//routes
-	e.POST("/employees", employee.CreateEmployeeHandler)
-	e.GET("/employees", employee.GetAllEmployeesHandler)
-	e.GET("/employees/:id", employee.GetEmployeeHandler)
-	e.DELETE("/employees/:id", employee.DeleteEmployeeHandler)
+	e.POST("/employees", employees.CreateEmployeeHandler)
+	e.GET("/employees", employees.GetAllEmployeesHandler)
+	e.GET("/employees/:id", employees.GetEmployeeHandler)
+	e.DELETE("/employees/:id", employees.DeleteEmployeeHandler)
 
-	e.PATCH("/employees/ClockIn/:id", employee.ClockInHandler)
-	e.PATCH("/employees/ClockOut/:id", employee.ClockOutHandler)
+	e.PUT("/employees/ClockIn/:id", timeCard.ClockInHandler)
+	e.PUT("/employees/ClockOut/:id", timeCard.ClockOutHandler)
+
+	e.GET("/employees/TotalTime/:id", timeCard.TotalTimeHandler)
 
 	log.Printf("listening on port 8080")
 	e.Logger.Fatal((e.Start(":8080")))
