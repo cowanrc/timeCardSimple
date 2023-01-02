@@ -1,0 +1,320 @@
+swagger: "2.0"
+info: 
+  description: "A simple timecard application"
+  version: "0.0.1"
+  title: "Timecard Application"
+basePath: "/"
+paths:
+  /employees: 
+    post:
+      tags:
+       - "employees"
+      summary: "Allows you to create a new employee"
+      description: ""
+      operationId: "createEmployee"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"  
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create an employee using a name and the dateCreated. This will return the employee's unique ID"
+        schema:      # Request body contents
+          $ref: '#/definitions/CreateEmployee'
+      responses:
+        202:
+          description: "The json payload has been acepted, attempting creation of Employee ID."
+          schema:
+            $ref: "#/definitions/EmployeeResponse"
+        400:
+          description: "Error in the POST payload resulted in a bad request."
+          schema: 
+            $ref: "#/definitions/Error"
+    get:
+      tags:
+        - "employees"
+      summary: "Returns a list of all employees"
+      operationId: "getEmployees"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "All existing employees are returned"
+          schema:
+            $ref: "#/definitions/EmployeesResponse"
+        400: 
+          description: "Error for the clock in"
+          schema: 
+            $ref: "#/definitions/Error"
+        404: 
+          description: "Employee is not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Database Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /employees/{id}:
+    get:
+      tags:
+        - "employees"
+      summary: "Allows you to get information for employee based off employeeID"
+      operationId: "getEmployee"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: integer
+        required: true
+        description: "Numeric ID of employee"
+      responses:
+        200:
+          description: "The clock in time has been created"
+          schema:
+            $ref: "#/definitions/EmployeeResponse"
+        400: 
+          description: "Error for the clock in"
+          schema: 
+            $ref: "#/definitions/Error"
+        404: 
+          description: "Employee is not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Database Error"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+        - "employees"
+      summary: "Remove employee from database"
+      operationId: "deleteEmployee"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: integer
+        required: true
+        description: "Numeric ID of employee"
+      responses:
+        200:
+          description: "Employee has been deleted"
+          schema:
+            $ref: "#/definitions/DeleteEmployeeResponse"
+        400: 
+          description: "Error for the clock in"
+          schema: 
+            $ref: "#/definitions/Error"
+        404: 
+          description: "Employee is not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Database Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /employees/ClockIn/{id}:
+    put:
+      tags:
+        - "timeCard"
+      summary: "Allows you to clock in"
+      description: ""
+      operationId: "clockIn"
+      produces:
+      - "application/json" 
+      parameters:
+      - in: "path"
+        name: "id"
+        type: integer
+        required: true
+        description: "Numeric ID of employee"
+      responses:
+        200:
+          description: "The clock in time has been created"
+          schema:
+            $ref: "#/definitions/ClockInResponse"
+        400: 
+          description: "Error for the clock in"
+          schema: 
+            $ref: "#/definitions/Error"
+        404: 
+          description: "Employee is not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Database Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /employees/ClockOut/{id}:
+    put:
+      tags:
+        - "timeCard"
+      summary: "Allows you to clock out"
+      description: ""
+      operationId: "clockOut"
+      produces:
+      - "application/json" 
+      parameters:
+      - in: "path"
+        name: "id"
+        type: integer
+        required: true
+        description: "Numeric ID of employee"
+      responses:
+        200:
+          description: "The clock in time has been created"
+          schema:
+            $ref: "#/definitions/ClockInResponse"
+        400: 
+          description: "Error for the clock in"
+          schema: 
+            $ref: "#/definitions/Error"
+        404: 
+          description: "Employee is not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Database Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /employees/TotalTime/{id}:
+    get:
+      tags:
+        - "timeCard"
+      summary: "Allows you to get total time for an employee"
+      description: ""
+      operationId: "getTotalTime"
+      produces:
+      - "application/json" 
+      parameters:
+      - in: "path"
+        name: "id"
+        type: integer
+        required: true
+        description: "Numeric ID of employee"
+      responses:
+        200:
+          description: "The total time the employee worked"
+          schema:
+            $ref: "#/definitions/TotalTimeResponse"
+        400: 
+          description: "Error for the clock in"
+          schema: 
+            $ref: "#/definitions/Error"
+        404: 
+          description: "Employee is not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Database Error"
+          schema:
+            $ref: "#/definitions/Error"
+definitions:
+  CreateEmployee:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: John Smith
+        DateCreated:
+          type: string
+          example: "2023-01-01 08:00:00"
+      required:
+        - Name
+  EmployeeResponse:
+    type: object
+    properties:
+      name: 
+        type: "string"
+        description: "Name of the Employee"
+        example: "John Smith"
+      employeeID:
+        type: "string"
+        description: "Unique Id for the created employee"
+        example: "1"
+      dateCreated: 
+        type: "string"
+        description: "Date employee was added to the system"
+        example: "01/01/2000"
+  EmployeesResponse:
+    type: array
+    items: 
+      $ref: "#/definitions/EmployeeResponse"
+  DeleteEmployeeResponse:
+    type: object
+    properties:
+      status:
+        type: "string"
+        example: "deleted"
+  ClockInResponse:
+    type: object
+    properties:
+      name:
+        type: "string"
+        description: "Name of the Employee"
+        example: "John Smith"
+      employeeID:
+        type: "string"
+        description: "Unique ID for that employee"
+        example: "1"
+      clockIn:
+        type: "string"
+        description: "Clock In time for the employee"
+        example: "Sun Jan  1 00:00:00 UTC 2023"
+  ClockOutResponse:
+    type: object
+    properties:
+      name:
+        type: "string"
+        description: "Name of the Employee"
+        example: "John Smith"
+      employeeID:
+        type: "string"
+        description: "Unique ID for that employee"
+        example: "1"
+      clockIn:
+        type: "string"
+        description: "Clock In time for the employee"
+        example: "Sun Jan  1 00:00:00 UTC 2023"
+      clockOut:
+        type: "string"
+        description: "Clock Out time for the employee"
+        example: "Sun Jan  1 08:00:00 UTC 2023"
+  TotalTimeResponse:
+    type: object
+    properties:
+      name:
+        type: "string"
+        description: "Name of the Employee"
+        example: "John Smith"
+      employeeID:
+        type: "string"
+        description: "Unique ID for that employee"
+        example: "1"
+      clockIn:
+        type: "string"
+        description: "Clock In time for the employee"
+        example: "Sun Jan  1 00:00:00 UTC 2023"
+      clockOut:
+        type: "string"
+        description: "Clock Out time for the employee"
+        example: "Sun Jan  1 08:00:00 UTC 2023"
+      totalTime:
+        type: "string"
+        description: "Total time worked for the employee"
+        example: "08:00:00"
+  Error: 
+    type: object
+    properties:
+      code:
+        type: string
+        description: "Code identification of the problem."
+      messages:
+        type: array
+        items:
+          type: string
+          example: "Something failed."
+        description: "Clear, complete description of the problem"

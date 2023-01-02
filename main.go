@@ -12,9 +12,8 @@ func main() {
 	log.Printf("Creating your time card application")
 	e := echo.New()
 
-	// e.File("/explorer", "ui/index.html")
-	// e.Static("/explorer", "ui")
-	e.Static("/swaggerui", "cmd/api/swaggerui")
+	e.File("/swaggerui", "ui/index.html")
+	e.Static("/swaggerui", "ui")
 
 	//routes
 	e.POST("/employees", employees.CreateEmployeeHandler)

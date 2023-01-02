@@ -7,9 +7,9 @@ import (
 
 const (
 	//Should probably have employees, then ClockIn/ClockOut as seperate Structs
-	queryInsertEmployee = "INSERT INTO timecard(name, dob) VALUES(?, ?);"
-	queryGetEmployees   = "SELECT employeeID, name, dob FROM timecard;"
-	queryGetEmployee    = "SELECT employeeID, name, dob FROM timecard WHERE employeeID=?;"
+	queryInsertEmployee = "INSERT INTO timecard(name, dateCreated) VALUES(?, ?);"
+	queryGetEmployees   = "SELECT employeeID, name, dateCreated FROM timecard;"
+	queryGetEmployee    = "SELECT employeeID, name, dateCreated FROM timecard WHERE employeeID=?;"
 	queryDeleteEmployee = "DELETE FROM timecard WHERE employeeID=?;"
 )
 
@@ -17,24 +17,24 @@ func (employee *Employee) Save() *errors.RestErr {
 	stmt, err := Client.Prepare(queryInsertEmployee)
 	if err != nil {
 		logger.Error("error when trying to prepare save employee statement", err)
-		return errors.NewInternalServerError("database error")
+		return errors.NewInternalServerError("error when trying to save employee")
 	}
 	defer stmt.Close()
 
-	if employee.Name == "" || employee.DateOfBirth == "" {
-		return errors.NewBadRequestError("Name or DoB cannot be nil")
+	if employee.Name == "" {
+		return errors.NewBadRequestError("employee name cannot be left empty")
 	}
 
-	insertResult, saveErr := stmt.Exec(employee.Name, employee.DateOfBirth)
+	insertResult, saveErr := stmt.Exec(employee.Name, employee.DateCreated)
 	if saveErr != nil {
 		logger.Error("error when trying to save employee", saveErr)
-		return errors.NewInternalServerError("database error")
+		return errors.NewInternalServerError("error when trying to save employee")
 	}
 
 	employeeId, err := insertResult.LastInsertId()
 	if err != nil {
 		logger.Error("Error when trying to get last insert ID after creating New Employee", err)
-		return errors.NewInternalServerError("database error")
+		return errors.NewInternalServerError("error when trying to save employee")
 	}
 
 	employee.EmployeeID = employeeId
@@ -46,7 +46,7 @@ func (employees *Employee) GetAll() ([]Employee, *errors.RestErr) {
 	stmt, err := Client.Prepare(queryGetEmployees)
 	if err != nil {
 		logger.Error("error when trying to prepare get employees statement", err)
-		return nil, errors.NewInternalServerError("database error")
+		return nil, errors.NewInternalServerError("error when trying to get users")
 	}
 
 	defer stmt.Close()
@@ -54,7 +54,7 @@ func (employees *Employee) GetAll() ([]Employee, *errors.RestErr) {
 	res, err := stmt.Query()
 	if err != nil {
 		logger.Error("error when trying to search rows for employees", err)
-		return nil, errors.NewInternalServerError("database error")
+		return nil, errors.NewInternalServerError("error when trying to get employees")
 	}
 
 	defer res.Close()
@@ -62,9 +62,9 @@ func (employees *Employee) GetAll() ([]Employee, *errors.RestErr) {
 	results := make([]Employee, 0)
 	for res.Next() {
 		var employee Employee
-		if err := res.Scan(&employee.EmployeeID, &employee.Name, &employee.DateOfBirth); err != nil {
+		if err := res.Scan(&employee.EmployeeID, &employee.Name, &employee.DateCreated); err != nil {
 			logger.Error("error when trying to scan employee row in employee struct", err)
-			return nil, errors.NewInternalServerError("database error")
+			return nil, errors.NewInternalServerError("error when trying to get employees")
 		}
 		results = append(results, employee)
 	}
@@ -80,15 +80,15 @@ func (employee *Employee) Get() *errors.RestErr {
 	stmt, err := Client.Prepare(queryGetEmployee)
 	if err != nil {
 		logger.Error("error when trying to prepare get employee statement", err)
-		return errors.NewInternalServerError("database error")
+		return errors.NewInternalServerError("error when trying to get employees")
 	}
 
 	defer stmt.Close()
 
 	result := stmt.QueryRow(employee.EmployeeID)
-	if getErr := result.Scan(&employee.EmployeeID, &employee.Name, &employee.DateOfBirth); getErr != nil {
+	if getErr := result.Scan(&employee.EmployeeID, &employee.Name, &employee.DateCreated); getErr != nil {
 		logger.Error("error when trying to get employee by ID", getErr)
-		return errors.NewInternalServerError("database error")
+		return errors.NewNotFoundError("employee might not exist in the system")
 	}
 
 	return nil
@@ -105,7 +105,7 @@ func (employee *Employee) Delete() *errors.RestErr {
 
 	if _, err := stmt.Exec(employee.EmployeeID); err != nil {
 		logger.Error("error when trying to get user from database", err)
-		return errors.NewNotFoundError("Employee does not exist")
+		return errors.NewNotFoundError("employee might not exist in the system")
 	}
 
 	return nil

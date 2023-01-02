@@ -9,34 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// CreateEmployeeHandler to enter name and DOB and get an employee ID in return
 func CreateEmployeeHandler(ctx echo.Context) error {
-	// var newEmployee NewEmployee
-	// newEmployee.EmployeeID = seq
-
-	// err := ctx.Bind(&newEmployee)
-	// if err != nil {
-	// 	return echo.NewHTTPError(http.StatusInternalServerError, "Error binding the structure")
-	// }
-
-	// log.Printf("Employee Name is : %s", newEmployee.Name)
-	// log.Printf("Employee id is: %v", newEmployee.EmployeeID)
-
-	// seq++
-
-	// m := map[string]string{
-	// 	"name":       newEmployee.Name,
-	// 	"employeeID": strconv.Itoa(newEmployee.EmployeeID),
-	// }
-
-	// var employee Employee
-
-	// employee.Name = newEmployee.Name
-	// employee.EmployeeID = newEmployee.EmployeeID
-	// employee.DateOfBirth = newEmployee.DateOfBirth
-	// TimeCard[newEmployee.EmployeeID] = &employee
-
-	// return ctx.JSON(http.StatusAccepted, m)
 	var employee database.Employee
 
 	if err := ctx.Bind(&employee); err != nil {
@@ -69,7 +42,7 @@ func GetEmployeeHandler(ctx echo.Context) error {
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
-		return echo.ErrNotFound
+		return nil
 	}
 
 	employee, getErr := EmployeeService.GetEmployee(employeeId)
@@ -83,16 +56,15 @@ func GetEmployeeHandler(ctx echo.Context) error {
 }
 
 func DeleteEmployeeHandler(ctx echo.Context) error {
-
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
-		return echo.ErrNotFound
+		return nil
 	}
 
 	if err := EmployeeService.DeleteEmployee(employeeId); err != nil {
 		ctx.JSON(err.Status, err)
-		return echo.ErrBadRequest
+		return nil
 	}
 
 	return ctx.JSON(http.StatusOK, map[string]string{"status": "deleted"})

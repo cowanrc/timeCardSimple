@@ -6,7 +6,7 @@ type Employee struct {
 	ClockIn     string `json:"clockIn,omitempty"`
 	ClockOut    string `json:"clockOut,omitempty"`
 	TotalTime   string `json:"totalTime,omitempty"`
-	DateOfBirth string `json:"dob"`
+	DateCreated string `json:"dateCreated"`
 }
 
 type TimeCard struct {
