@@ -13,7 +13,7 @@ const (
 	queryDeleteEmployee = "DELETE FROM timecard WHERE employeeID=?;"
 )
 
-func (employee *Employee) Save() *errors.RestErr {
+func Save(employee *Employee) *errors.RestErr {
 	stmt, err := Client.Prepare(queryInsertEmployee)
 	if err != nil {
 		logger.Error("error when trying to prepare save employee statement", err)
@@ -42,7 +42,7 @@ func (employee *Employee) Save() *errors.RestErr {
 
 }
 
-func (employees *Employee) GetAll() ([]Employee, *errors.RestErr) {
+func GetAll() ([]Employee, *errors.RestErr) {
 	stmt, err := Client.Prepare(queryGetEmployees)
 	if err != nil {
 		logger.Error("error when trying to prepare get employees statement", err)
@@ -76,7 +76,7 @@ func (employees *Employee) GetAll() ([]Employee, *errors.RestErr) {
 	return results, nil
 }
 
-func (employee *Employee) Get() *errors.RestErr {
+func Get(employee *Employee) *errors.RestErr {
 	stmt, err := Client.Prepare(queryGetEmployee)
 	if err != nil {
 		logger.Error("error when trying to prepare get employee statement", err)
@@ -94,7 +94,7 @@ func (employee *Employee) Get() *errors.RestErr {
 	return nil
 }
 
-func (employee *Employee) Delete() *errors.RestErr {
+func Delete(employee *Employee) *errors.RestErr {
 	stmt, err := Client.Prepare(queryDeleteEmployee)
 	if err != nil {
 		logger.Error("error when trying to prepare delete employee statement", err)

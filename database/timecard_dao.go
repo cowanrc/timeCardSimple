@@ -16,7 +16,7 @@ const (
 	queryGetEmployeeTimecard = "SELECT employeeID, name, clockIn, clockOut, totalTime FROM timecard WHERE employeeID=?;"
 )
 
-func (employee *TimeCard) Get() *errors.RestErr {
+func GetSimple(employee *TimeCard) *errors.RestErr {
 	stmt, err := Client.Prepare(queryGetEmployeeSimple)
 	if err != nil {
 		logger.Error("error when trying to prepare get employee statement", err)
@@ -33,7 +33,7 @@ func (employee *TimeCard) Get() *errors.RestErr {
 
 	return nil
 }
-func (employee *TimeCard) EmployeeClockIn() *errors.RestErr {
+func EmployeeClockIn(employee *TimeCard) *errors.RestErr {
 	stmt, err := Client.Prepare(queryClockIn)
 	if err != nil {
 		logger.Error("error when trying to prepare clockIn employee statement", err)
@@ -50,7 +50,7 @@ func (employee *TimeCard) EmployeeClockIn() *errors.RestErr {
 	return nil
 }
 
-func (employee *TimeCard) EmployeeClockOut() *errors.RestErr {
+func EmployeeClockOut(employee *TimeCard) *errors.RestErr {
 	stmt, err := Client.Prepare(queryClockOut)
 	if err != nil {
 		logger.Error("error when trying to prepare clockOut employee statement", err)
@@ -67,7 +67,7 @@ func (employee *TimeCard) EmployeeClockOut() *errors.RestErr {
 	return nil
 }
 
-func (employee *TimeCard) EmployeeTotalTime() *errors.RestErr {
+func EmployeeTotalTime(employee *TimeCard) *errors.RestErr {
 	stmt, err := Client.Prepare(queryTotalTime)
 	if err != nil {
 		logger.Error("error when trying to prepare totalTime employee statement", err)
@@ -84,7 +84,7 @@ func (employee *TimeCard) EmployeeTotalTime() *errors.RestErr {
 	return nil
 }
 
-func (employee *TimeCard) GetClockIn() *errors.RestErr {
+func GetClockIn(employee *TimeCard) *errors.RestErr {
 	stmt, err := Client.Prepare(queryGetClockIn)
 	if err != nil {
 		logger.Error("error when trying to prepare get employee statement", err)
@@ -106,7 +106,7 @@ func (employee *TimeCard) GetClockIn() *errors.RestErr {
 	return nil
 }
 
-func (employee *TimeCard) GetClockInClockOut() *errors.RestErr {
+func GetClockInClockOut(employee *TimeCard) *errors.RestErr {
 	stmt, err := Client.Prepare(queryGetClockInClockOut)
 	if err != nil {
 		logger.Error("error when trying to prepare get employee clock in/clock out statement", err)
@@ -128,7 +128,7 @@ func (employee *TimeCard) GetClockInClockOut() *errors.RestErr {
 	return nil
 }
 
-func (employee *TimeCard) GetTime() *errors.RestErr {
+func GetTime(employee *TimeCard) *errors.RestErr {
 	stmt, err := Client.Prepare(queryGetEmployeeTimecard)
 	if err != nil {
 		logger.Error("error when trying to prepare get employee time card statement", err)

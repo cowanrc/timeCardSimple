@@ -24,7 +24,7 @@ func (s *employeesService) CreateEmployee(employee database.Employee) (*database
 
 	employee.DateCreated = api.GetNowDBFormat()
 
-	if err := employee.Save(); err != nil {
+	if err := database.Save(&employee); err != nil {
 		return nil, err
 	}
 
@@ -32,13 +32,12 @@ func (s *employeesService) CreateEmployee(employee database.Employee) (*database
 }
 
 func (s *employeesService) GetAllEmployees() (database.Employees, *errors.RestErr) {
-	dao := &database.Employee{}
-	return dao.GetAll()
+	return database.GetAll()
 }
 
 func (s *employeesService) GetEmployee(employeeId int64) (*database.Employee, *errors.RestErr) {
 	result := &database.Employee{EmployeeID: employeeId}
-	if err := result.Get(); err != nil {
+	if err := database.Get(result); err != nil {
 		return nil, err
 	}
 
@@ -53,5 +52,5 @@ func (s *employeesService) DeleteEmployee(employeeId int64) *errors.RestErr {
 		return errors.NewNotFoundError(fmt.Sprintf("Employee ID %d does not exist", employeeId))
 	}
 
-	return employee.Delete()
+	return database.Delete(employee)
 }

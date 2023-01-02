@@ -25,7 +25,8 @@ var (
 	schema   = os.Getenv(mysql_timecard_schema)
 )
 
-func init() {
+func CreateDatabase() {
+	fmt.Println("HELLO")
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
 		username, password, host, schema,
 	)

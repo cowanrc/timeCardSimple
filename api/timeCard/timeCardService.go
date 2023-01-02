@@ -22,14 +22,14 @@ type timeCardServiceInterface interface {
 
 func (s *timeCardService) ClockInEmployee(employee database.TimeCard) (*database.TimeCard, *errors.RestErr) {
 	current := &database.TimeCard{EmployeeID: employee.EmployeeID}
-	if err := current.Get(); err != nil {
+	if err := database.GetSimple(current); err != nil {
 		return nil, err
 	}
 
 	current.ClockIn = time.Now().UTC().Format("Mon Jan _2 15:04:05 MST 2006")
 	log.Printf("Employee clocked in at: %s", current.ClockIn)
 
-	if err := current.EmployeeClockIn(); err != nil {
+	if err := database.EmployeeClockIn(current); err != nil {
 		return nil, err
 	}
 
@@ -38,13 +38,13 @@ func (s *timeCardService) ClockInEmployee(employee database.TimeCard) (*database
 
 func (s *timeCardService) ClockOutEmployee(employee database.TimeCard) (*database.TimeCard, *errors.RestErr) {
 	current := &database.TimeCard{EmployeeID: employee.EmployeeID}
-	if err := current.GetClockIn(); err != nil {
+	if err := database.GetClockIn(current); err != nil {
 		return nil, err
 	}
 
 	current.ClockOut = time.Now().UTC().Format("Mon Jan _2 15:04:05 MST 2006")
 
-	if err := current.EmployeeClockOut(); err != nil {
+	if err := database.EmployeeClockOut(current); err != nil {
 		return nil, err
 	}
 
@@ -53,17 +53,17 @@ func (s *timeCardService) ClockOutEmployee(employee database.TimeCard) (*databas
 
 func (s *timeCardService) GetTotalTime(employeeId int64) (*database.TimeCard, *errors.RestErr) {
 	employee := &database.TimeCard{EmployeeID: employeeId}
-	if err := employee.GetClockInClockOut(); err != nil {
+	if err := database.GetClockInClockOut(employee); err != nil {
 		return nil, err
 	}
 
 	employee.TotalTime = api.CalculateTotalTime(employee.ClockIn, employee.ClockOut)
 
-	if err := employee.EmployeeTotalTime(); err != nil {
+	if err := database.EmployeeTotalTime(employee); err != nil {
 		return nil, err
 	}
 
-	if err := employee.GetTime(); err != nil {
+	if err := database.GetTime(employee); err != nil {
 		return nil, err
 	}
 
