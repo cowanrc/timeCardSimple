@@ -1,7 +1,6 @@
 package timeCard
 
 import (
-	"log"
 	"time"
 	"timeCardSimple/api"
 	"timeCardSimple/database"
@@ -27,7 +26,6 @@ func (s *timeCardService) ClockInEmployee(employee database.TimeCard) (*database
 	}
 
 	current.ClockIn = time.Now().UTC().Format("Mon Jan _2 15:04:05 MST 2006")
-	log.Printf("Employee clocked in at: %s", current.ClockIn)
 
 	if err := database.EmployeeClockIn(current); err != nil {
 		return nil, err

@@ -26,7 +26,6 @@ var (
 )
 
 func CreateDatabase() {
-	fmt.Println("HELLO")
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
 		username, password, host, schema,
 	)
