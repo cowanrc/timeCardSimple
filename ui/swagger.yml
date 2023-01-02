@@ -19,7 +19,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Create an employee using a name and the date of birth (DOB). This will return the employee's unique ID"
+        description: "Create an employee using a name and the dateCreated. This will return the employee's unique ID"
         schema:      # Request body contents
           $ref: '#/definitions/CreateEmployee'
       responses:
@@ -219,12 +219,11 @@ definitions:
         Name:
           type: string
           example: John Smith
-        DoB:
+        DateCreated:
           type: string
-          example: "9/5/1994"
+          example: "2023-01-01 08:00:00"
       required:
         - Name
-        - DoB
   EmployeeResponse:
     type: object
     properties:
@@ -236,9 +235,9 @@ definitions:
         type: "string"
         description: "Unique Id for the created employee"
         example: "1"
-      dob: 
+      dateCreated: 
         type: "string"
-        description: "Date of Birth for employee"
+        description: "Date employee was added to the system"
         example: "01/01/2000"
   EmployeesResponse:
     type: array
