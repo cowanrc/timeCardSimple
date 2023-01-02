@@ -12,7 +12,7 @@ func ClockInHandler(ctx echo.Context) error {
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
-		return echo.ErrNotFound
+		return nil
 	}
 
 	var employee database.TimeCard
@@ -21,7 +21,7 @@ func ClockInHandler(ctx echo.Context) error {
 	result, err := TimeCardService.ClockInEmployee(employee)
 	if err != nil {
 		ctx.JSON(err.Status, err)
-		return echo.ErrBadRequest
+		return nil
 	}
 
 	return ctx.JSON(http.StatusOK, result)
@@ -31,7 +31,7 @@ func ClockOutHandler(ctx echo.Context) error {
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
-		return echo.ErrNotFound
+		return nil
 	}
 
 	var employee database.TimeCard
@@ -40,7 +40,7 @@ func ClockOutHandler(ctx echo.Context) error {
 	result, err := TimeCardService.ClockOutEmployee(employee)
 	if err != nil {
 		ctx.JSON(err.Status, err)
-		return echo.ErrBadRequest
+		return nil
 	}
 
 	return ctx.JSON(http.StatusOK, result)
@@ -50,7 +50,7 @@ func TotalTimeHandler(ctx echo.Context) error {
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
-		return echo.ErrNotFound
+		return nil
 	}
 
 	employee, getErr := TimeCardService.GetTotalTime(employeeId)

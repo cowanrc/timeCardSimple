@@ -2,6 +2,7 @@ package employees
 
 import (
 	"fmt"
+	"timeCardSimple/api"
 	"timeCardSimple/database"
 	"timeCardSimple/errors"
 )
@@ -20,6 +21,8 @@ type employeesServiceInterface interface {
 }
 
 func (s *employeesService) CreateEmployee(employee database.Employee) (*database.Employee, *errors.RestErr) {
+
+	employee.DateCreated = api.GetNowDBFormat()
 
 	if err := employee.Save(); err != nil {
 		return nil, err

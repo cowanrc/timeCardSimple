@@ -1,7 +1,6 @@
 package timeCard
 
 import (
-	"fmt"
 	"log"
 	"time"
 	"timeCardSimple/api"
@@ -49,9 +48,6 @@ func (s *timeCardService) ClockOutEmployee(employee database.TimeCard) (*databas
 		return nil, err
 	}
 
-	// current.TotalTime = employeeTotalTime(current.ClockIn, current.ClockOut)
-	// log.Printf("Employee: %s worked for a total of: %v", current.Name, current.TotalTime)
-
 	return current, nil
 }
 
@@ -61,20 +57,13 @@ func (s *timeCardService) GetTotalTime(employeeId int64) (*database.TimeCard, *e
 		return nil, err
 	}
 
-	clockInTime, _ := time.Parse("Mon Jan _2 15:04:05 MST 2006", employee.ClockIn)
-	clockOutTime, _ := time.Parse("Mon Jan _2 15:04:05 MST 2006", employee.ClockOut)
-	employee.TotalTime = api.RoundDuration(clockOutTime.Sub(clockInTime))
-
-	fmt.Printf("Employee ClockIn: %v", employee.ClockIn)
-	fmt.Printf("Employee Clockout: %v", employee.ClockOut)
-	fmt.Printf("Employee Time: %v", employee.TotalTime)
+	employee.TotalTime = api.CalculateTotalTime(employee.ClockIn, employee.ClockOut)
 
 	if err := employee.EmployeeTotalTime(); err != nil {
 		return nil, err
 	}
 
 	if err := employee.GetTime(); err != nil {
-		fmt.Println("Here")
 		return nil, err
 	}
 
