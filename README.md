@@ -6,7 +6,6 @@ To launch the application, first make sure you have Golang installed locally, th
 
 ```
 go run main.go
-
 ```
 
 This starts the application locally and allows access to the Swagger UI at :8080/swaggerui/
@@ -25,10 +24,9 @@ This starts the application locally and allows access to the Swagger UI at :8080
 
 To run tests, run this command in your terminal in the directory
 
-`
+```
 go test -v
-
-`
+```
 
 ## Contributing
 
