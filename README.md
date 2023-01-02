@@ -2,7 +2,7 @@
 Simple version of the TimeCard application. This application allows users to add employees to a database, and allows employees to clock in and clock out. Total time can also be retrieved.
 
 ## Launch Application
-To launch the application, first make sure you have Golang installed locally, then run
+To launch the application, first make sure you have Golang installed locally. Configure env variables correctly for database init. Next set env variable "is_testing" to "false". Then run:
 
 ```
 go run main.go
@@ -22,7 +22,7 @@ This starts the application locally and allows access to the Swagger UI at :8080
 
 ## Tests
 
-To run tests, run this command in your terminal in the directory
+To run tests, first make sure env variable "is_testing" is set to "true", then run this command in your terminal in the directory
 
 ```
 go test -v

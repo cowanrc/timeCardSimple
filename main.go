@@ -27,7 +27,6 @@ func getenvBool(key string) (bool, error) {
 func main() {
 	key := os.Getenv(is_testing)
 	isTesting, err := getenvBool(key)
-	fmt.Println("!!!!!!!: ", isTesting)
 	if err != nil {
 		panic(err)
 	}
@@ -50,19 +49,22 @@ func main() {
 	e.GET("/employees", func(c echo.Context) error {
 		return employees.GetAllEmployeesHandler(c, isTesting)
 	})
-
 	e.GET("/employees/:id", func(c echo.Context) error {
 		return employees.GetEmployeeHandler(c, isTesting)
 	})
-
 	e.DELETE("/employees/:id", func(c echo.Context) error {
 		return employees.DeleteEmployeeHandler(c, isTesting)
 	})
 
-	e.PUT("/employees/ClockIn/:id", timeCard.ClockInHandler)
-	e.PUT("/employees/ClockOut/:id", timeCard.ClockOutHandler)
-
-	e.GET("/employees/TotalTime/:id", timeCard.TotalTimeHandler)
+	e.PUT("/employees/ClockIn/:id", func(c echo.Context) error {
+		return timeCard.ClockInHandler(c, isTesting)
+	})
+	e.PUT("/employees/ClockOut/:id", func(c echo.Context) error {
+		return timeCard.ClockOutHandler(c, isTesting)
+	})
+	e.GET("/employees/TotalTime/:id", func(c echo.Context) error {
+		return timeCard.TotalTimeHandler(c, isTesting)
+	})
 
 	log.Printf("listening on port 8080")
 	e.Logger.Fatal((e.Start(":8080")))

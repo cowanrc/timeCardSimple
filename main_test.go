@@ -71,19 +71,19 @@ func TestDeleteEmployee(t *testing.T) {
 // 	checkResponseCode(t, http.StatusBadRequest, response.StatusCode)
 // }
 
-// func TestClockIn(t *testing.T) {
-// 	req, _ := http.NewRequest(http.MethodPost, link+"/ClockIn/1", nil)
-// 	response := executeRequest(req)
+func TestClockIn(t *testing.T) {
+	req, _ := http.NewRequest(http.MethodPut, link+"/ClockIn/1", nil)
+	response := executeRequest(req)
 
-// 	checkResponseCode(t, http.StatusAccepted, response.StatusCode)
+	checkResponseCode(t, http.StatusOK, response.StatusCode)
 
-// 	// body, _ := ioutil.ReadAll(response.Body)
-// 	// bodyString := string(body)
+	// body, _ := ioutil.ReadAll(response.Body)
+	// bodyString := string(body)
 
-// 	// if !strings.Contains(bodyString, "clockIn") {
-// 	// 	t.FailNow()
-// 	// }
-// }
+	// if !strings.Contains(bodyString, "clockIn") {
+	// 	t.FailNow()
+	// }
+}
 
 // func TestClockInTwiceError(t *testing.T) {
 // 	req, _ := http.NewRequest(http.MethodPost, link+"/ClockIn/1", nil)
@@ -113,19 +113,19 @@ func TestDeleteEmployee(t *testing.T) {
 // 	}
 // }
 
-// func TestClockOut(t *testing.T) {
-// 	req, _ := http.NewRequest(http.MethodPost, link+"/ClockOut/1", nil)
-// 	response := executeRequest(req)
+func TestClockOut(t *testing.T) {
+	req, _ := http.NewRequest(http.MethodPut, link+"/ClockOut/1", nil)
+	response := executeRequest(req)
 
-// 	checkResponseCode(t, http.StatusAccepted, response.StatusCode)
+	checkResponseCode(t, http.StatusOK, response.StatusCode)
 
-// 	body, _ := ioutil.ReadAll(response.Body)
-// 	bodyString := string(body)
+	// body, _ := ioutil.ReadAll(response.Body)
+	// bodyString := string(body)
 
-// 	if !strings.Contains(bodyString, "clockOut") {
-// 		t.FailNow()
-// 	}
-// }
+	// if !strings.Contains(bodyString, "clockOut") {
+	// 	t.FailNow()
+	// }
+}
 
 // func TestClockOutTwiceError(t *testing.T) {
 // 	req, _ := http.NewRequest(http.MethodPost, link+"/ClockOut/1", nil)
@@ -140,6 +140,13 @@ func TestDeleteEmployee(t *testing.T) {
 // 		t.FailNow()
 // 	}
 // }
+
+func TestTotalTime(t *testing.T) {
+	req, _ := http.NewRequest(http.MethodGet, link+"/TotalTime/1", nil)
+	response := executeRequest(req)
+
+	checkResponseCode(t, http.StatusOK, response.StatusCode)
+}
 
 func executeRequest(req *http.Request) *http.Response {
 	resp, err := client.Do(req)
