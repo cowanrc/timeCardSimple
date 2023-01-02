@@ -219,9 +219,6 @@ definitions:
         Name:
           type: string
           example: John Smith
-        DateCreated:
-          type: string
-          example: "2023-01-01 08:00:00"
       required:
         - Name
   EmployeeResponse:
