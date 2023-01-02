@@ -28,12 +28,5 @@ To run tests, first make sure env variable "is_testing" is set to "true", then r
 go test -v
 ```
 
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
 
 

@@ -6,7 +6,6 @@ import (
 )
 
 const (
-	//Should probably have employees, then ClockIn/ClockOut as seperate Structs
 	queryInsertEmployee = "INSERT INTO timecard(name, dateCreated) VALUES(?, ?);"
 	queryGetEmployees   = "SELECT employeeID, name, dateCreated FROM timecard;"
 	queryGetEmployee    = "SELECT employeeID, name, dateCreated FROM timecard WHERE employeeID=?;"
