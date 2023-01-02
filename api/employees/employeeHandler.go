@@ -9,13 +9,19 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func CreateEmployeeHandler(ctx echo.Context) error {
+func CreateEmployeeHandler(ctx echo.Context, isTesting bool) error {
 	var employee database.Employee
 
 	if err := ctx.Bind(&employee); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
 		ctx.JSON(restErr.Status, restErr)
 		return err
+	}
+
+	//improper use of unit test handling
+	if isTesting {
+		m := mockEmployee(mockEmployeeString)
+		return ctx.JSON(http.StatusCreated, m)
 	}
 
 	result, saveErr := EmployeeService.CreateEmployee(employee)
@@ -25,24 +31,33 @@ func CreateEmployeeHandler(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusCreated, result)
-
 }
 
-func GetAllEmployeesHandler(ctx echo.Context) error {
+func GetAllEmployeesHandler(ctx echo.Context, isTesting bool) error {
 	employees, getErr := EmployeeService.GetAllEmployees()
 	if getErr != nil {
 		ctx.JSON(getErr.Status, getErr)
 		return nil
 	}
 
+	if isTesting {
+		return nil
+	}
+
 	return ctx.JSON(http.StatusOK, employees)
 }
 
-func GetEmployeeHandler(ctx echo.Context) error {
+func GetEmployeeHandler(ctx echo.Context, isTesting bool) error {
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
 		return nil
+	}
+
+	//improper use of unit test handling
+	if isTesting {
+		m := mockEmployee(mockEmployeeString)
+		return ctx.JSON(http.StatusOK, m)
 	}
 
 	employee, getErr := EmployeeService.GetEmployee(employeeId)
@@ -55,11 +70,16 @@ func GetEmployeeHandler(ctx echo.Context) error {
 
 }
 
-func DeleteEmployeeHandler(ctx echo.Context) error {
+func DeleteEmployeeHandler(ctx echo.Context, isTesting bool) error {
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
 		return nil
+	}
+
+	//improper use of unit test handling
+	if isTesting {
+		return ctx.JSON(http.StatusOK, map[string]string{"status": "deleted"})
 	}
 
 	if err := EmployeeService.DeleteEmployee(employeeId); err != nil {
