@@ -9,7 +9,7 @@ go run main.go
 
 ```
 
-This starts the application locally and allows access to the Swagger UI at :8080/explorer/
+This starts the application locally and allows access to the Swagger UI at :8080/swaggerui/
 
 ## REST API Calls
 
