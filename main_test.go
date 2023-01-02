@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"strings"
 
 	"net/http"
 	"testing"
@@ -11,9 +13,17 @@ import (
 
 var client = http.DefaultClient
 
-var name1 = "John Smith"
+var (
+	link = "http://localhost:8080/employees"
 
-var link = "http://localhost:8080/employees"
+	name1 = "John Smith"
+
+	expectedEmployeeResponse = `{"name":"John Smith","employeeID":1,"dateCreated":"01/01/2000"}`
+
+	expectedClockInResponse   = `{"name":"John Smith","employeeID":1,"clockIn":"Sun Jan  2 01:00:00 UTC 2023"}`
+	expectedClockOutResponse  = `{"name":"John Smith","employeeID":1,"clockIn":"Sun Jan  2 01:00:00 UTC 2023","clockOut":"Sun Jan  2 09:00:00 UTC 2023"}`
+	expectedTotalTimeResponse = `{"name":"John Smith","employeeID":1,"clockIn":"Sun Jan  2 01:00:00 UTC 2023","clockOut":"Sun Jan  2 09:00:00 UTC 2023","totalTime":"08:00:00"}`
+)
 
 func TestMain(m *testing.M) {
 	go main()
@@ -27,49 +37,42 @@ func TestCreateEmployee(t *testing.T) {
 	req.Header.Add("Content-Type", "application/json")
 	response := executeRequest(req)
 
-	checkResponseCode(t, http.StatusOK, response.StatusCode)
+	checkResponseCode(t, http.StatusCreated, response.StatusCode)
+
+	body, _ := ioutil.ReadAll(response.Body)
+	bodyString := string(body)
+
+	if !strings.Contains(bodyString, expectedEmployeeResponse) {
+		t.FailNow()
+	}
+
 }
 
 func TestGetEmployee(t *testing.T) {
-
 	req, _ := http.NewRequest(http.MethodGet, link+"/1", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.StatusCode)
 
-	// body, _ := ioutil.ReadAll(response.Body)
-	// bodyString := string(body)
+	body, _ := ioutil.ReadAll(response.Body)
+	bodyString := string(body)
 
-	// if !strings.Contains(bodyString, `"Name":"John Smith","employeeID":1,"DoB":"1/1/2000"`) {
-	// 	t.FailNow()
-	// }
+	if !strings.Contains(bodyString, expectedEmployeeResponse) {
+		t.FailNow()
+	}
 }
 
 func TestDeleteEmployee(t *testing.T) {
-
-	// req, _ := http.NewRequest(http.MethodGet, link+"/1", nil)
-	// response := executeRequest(req)
-
-	// checkResponseCode(t, http.StatusOK, response.StatusCode)
-
-	req, _ := http.NewRequest(http.MethodDelete, link+"/1", nil)
+	req, _ := http.NewRequest(http.MethodGet, link+"/1", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.StatusCode)
 
-	// req, _ = http.NewRequest(http.MethodGet, link+"/1", nil)
-	// response = executeRequest(req)
+	req, _ = http.NewRequest(http.MethodDelete, link+"/1", nil)
+	response = executeRequest(req)
 
-	// checkResponseCode(t, http.StatusNotFound, response.StatusCode)
-
+	checkResponseCode(t, http.StatusOK, response.StatusCode)
 }
-
-// func TestBadDelete(t *testing.T) {
-// 	req, _ := http.NewRequest(http.MethodDelete, link+"/yellow", nil)
-// 	response := executeRequest(req)
-
-// 	checkResponseCode(t, http.StatusBadRequest, response.StatusCode)
-// }
 
 func TestClockIn(t *testing.T) {
 	req, _ := http.NewRequest(http.MethodPut, link+"/ClockIn/1", nil)
@@ -77,41 +80,13 @@ func TestClockIn(t *testing.T) {
 
 	checkResponseCode(t, http.StatusOK, response.StatusCode)
 
-	// body, _ := ioutil.ReadAll(response.Body)
-	// bodyString := string(body)
+	body, _ := ioutil.ReadAll(response.Body)
+	bodyString := string(body)
 
-	// if !strings.Contains(bodyString, "clockIn") {
-	// 	t.FailNow()
-	// }
+	if !strings.Contains(bodyString, expectedClockInResponse) {
+		t.FailNow()
+	}
 }
-
-// func TestClockInTwiceError(t *testing.T) {
-// 	req, _ := http.NewRequest(http.MethodPost, link+"/ClockIn/1", nil)
-// 	response := executeRequest(req)
-
-// 	checkResponseCode(t, http.StatusBadRequest, response.StatusCode)
-
-// 	body, _ := ioutil.ReadAll(response.Body)
-// 	bodyString := string(body)
-
-// 	if !strings.Contains(bodyString, "User cannot clock in multiple times before clocking out once.") {
-// 		t.FailNow()
-// 	}
-// }
-
-// func TestClockInNotFound(t *testing.T) {
-
-// 	req, _ := http.NewRequest(http.MethodPost, link+"/ClockIn/3", nil)
-// 	response := executeRequest(req)
-
-// 	checkResponseCode(t, http.StatusNotFound, response.StatusCode)
-// 	body, _ := ioutil.ReadAll(response.Body)
-// 	bodyString := string(body)
-
-// 	if !strings.Contains(bodyString, "Either this employee has been removed or has yet to be added") {
-// 		t.FailNow()
-// 	}
-// }
 
 func TestClockOut(t *testing.T) {
 	req, _ := http.NewRequest(http.MethodPut, link+"/ClockOut/1", nil)
@@ -119,33 +94,26 @@ func TestClockOut(t *testing.T) {
 
 	checkResponseCode(t, http.StatusOK, response.StatusCode)
 
-	// body, _ := ioutil.ReadAll(response.Body)
-	// bodyString := string(body)
+	body, _ := ioutil.ReadAll(response.Body)
+	bodyString := string(body)
 
-	// if !strings.Contains(bodyString, "clockOut") {
-	// 	t.FailNow()
-	// }
+	if !strings.Contains(bodyString, expectedClockOutResponse) {
+		t.FailNow()
+	}
 }
-
-// func TestClockOutTwiceError(t *testing.T) {
-// 	req, _ := http.NewRequest(http.MethodPost, link+"/ClockOut/1", nil)
-// 	response := executeRequest(req)
-
-// 	checkResponseCode(t, http.StatusBadRequest, response.StatusCode)
-
-// 	body, _ := ioutil.ReadAll(response.Body)
-// 	bodyString := string(body)
-
-// 	if !strings.Contains(bodyString, "You cannot clock out multiple times. Without Clocking in again first") {
-// 		t.FailNow()
-// 	}
-// }
 
 func TestTotalTime(t *testing.T) {
 	req, _ := http.NewRequest(http.MethodGet, link+"/TotalTime/1", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.StatusCode)
+
+	body, _ := ioutil.ReadAll(response.Body)
+	bodyString := string(body)
+
+	if !strings.Contains(bodyString, expectedTotalTimeResponse) {
+		t.FailNow()
+	}
 }
 
 func executeRequest(req *http.Request) *http.Response {
