@@ -31,20 +31,28 @@ func CreateEmployeeHandler(ctx echo.Context, isTesting bool) error {
 	return ctx.JSON(http.StatusCreated, result)
 }
 
-func GetAllEmployeesHandler(ctx echo.Context) error {
+func GetAllEmployeesHandler(ctx echo.Context, isTesting bool) error {
 	employees, getErr := EmployeeService.GetAllEmployees()
 	if getErr != nil {
 		ctx.JSON(getErr.Status, getErr)
 		return nil
 	}
 
+	if isTesting {
+		return nil
+	}
+
 	return ctx.JSON(http.StatusOK, employees)
 }
 
-func GetEmployeeHandler(ctx echo.Context) error {
+func GetEmployeeHandler(ctx echo.Context, isTesting bool) error {
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
+		return nil
+	}
+
+	if isTesting {
 		return nil
 	}
 
@@ -58,10 +66,14 @@ func GetEmployeeHandler(ctx echo.Context) error {
 
 }
 
-func DeleteEmployeeHandler(ctx echo.Context) error {
+func DeleteEmployeeHandler(ctx echo.Context, isTesting bool) error {
 	employeeId, idErr := api.GetEmployeeId(ctx.Param("id"))
 	if idErr != nil {
 		ctx.JSON(idErr.Status, idErr)
+		return nil
+	}
+
+	if isTesting {
 		return nil
 	}
 

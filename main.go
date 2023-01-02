@@ -27,6 +27,7 @@ func getenvBool(key string) (bool, error) {
 func main() {
 	key := os.Getenv(is_testing)
 	isTesting, err := getenvBool(key)
+	fmt.Println("!!!!!!!: ", isTesting)
 	if err != nil {
 		panic(err)
 	}
@@ -44,15 +45,19 @@ func main() {
 
 	//routes
 	e.POST("/employees", func(c echo.Context) error {
-		if isTesting {
-			return employees.CreateEmployeeHandler(c, isTesting)
-		} else {
-			return employees.CreateEmployeeHandler(c, isTesting)
-		}
+		return employees.CreateEmployeeHandler(c, isTesting)
 	})
-	e.GET("/employees", employees.GetAllEmployeesHandler)
-	e.GET("/employees/:id", employees.GetEmployeeHandler)
-	e.DELETE("/employees/:id", employees.DeleteEmployeeHandler)
+	e.GET("/employees", func(c echo.Context) error {
+		return employees.GetAllEmployeesHandler(c, isTesting)
+	})
+
+	e.GET("/employees/:id", func(c echo.Context) error {
+		return employees.GetEmployeeHandler(c, isTesting)
+	})
+
+	e.DELETE("/employees/:id", func(c echo.Context) error {
+		return employees.DeleteEmployeeHandler(c, isTesting)
+	})
 
 	e.PUT("/employees/ClockIn/:id", timeCard.ClockInHandler)
 	e.PUT("/employees/ClockOut/:id", timeCard.ClockOutHandler)
