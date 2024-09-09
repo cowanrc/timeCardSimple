@@ -6,7 +6,9 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
+	// _ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 const (
@@ -14,6 +16,7 @@ const (
 	mysql_timecard_password = "mysql_timecard_password"
 	mysql_timecard_host     = "mysql_timecard_host"
 	mysql_timecard_schema   = "mysql_timecard_schema"
+	datbaseEnv              = "DATABASE_URL"
 )
 
 var (
@@ -26,6 +29,8 @@ var (
 )
 
 func CreateDatabase() {
+	ds := mustGetEnv(datbaseEnv)
+	db := sqlx.MustConnect("postgres", ds)
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
 		username, password, host, schema,
 	)
@@ -42,4 +47,13 @@ func CreateDatabase() {
 
 	log.Println("database successfully configured")
 
+}
+
+func mustGetEnv(key string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		log.Fatalf("environment variable %s not set", key)
+	}
+
+	return value
 }
