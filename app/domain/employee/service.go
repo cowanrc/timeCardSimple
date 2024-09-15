@@ -1,10 +1,10 @@
 package employee
 
-//go:generate go run github.com/golang/mock/mockgen -package employeetest -destination employeetest/mock_test_service.go timeCardSimple/domain/employee Service
+//go:generate go run github.com/golang/mock/mockgen -package employeetest -destination employeetest/mock_test_service.go timeCardSimple/app/domain/employee Service
 
 import (
 	"context"
-	"timeCardSimple/domain/id"
+	"timeCardSimple/app/domain/id"
 )
 
 type Service interface {

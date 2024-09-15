@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"text/template"
 
-	"timeCardSimple/domain/id"
-	"timeCardSimple/infra/trace"
+	"timeCardSimple/app/domain/id"
+	"timeCardSimple/app/infra/trace"
 )
 
 type QueryExecerContext interface {

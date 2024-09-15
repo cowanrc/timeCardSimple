@@ -7,8 +7,8 @@ package employeetest
 import (
 	context "context"
 	reflect "reflect"
-	employee "timeCardSimple/domain/employee"
-	id "timeCardSimple/domain/id"
+	employee "timeCardSimple/app/domain/employee"
+	id "timeCardSimple/app/domain/id"
 
 	gomock "github.com/golang/mock/gomock"
 )

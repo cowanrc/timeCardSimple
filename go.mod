@@ -1,6 +1,8 @@
 module timeCardSimple
 
-go 1.19
+go 1.21
+
+toolchain go1.23.0
 
 require (
 	github.com/go-sql-driver/mysql v1.8.1
@@ -16,6 +18,7 @@ require (
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/mattn/go-colorable v0.1.11 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/sethvargo/go-password v0.3.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect

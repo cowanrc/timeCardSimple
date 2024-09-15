@@ -2,7 +2,7 @@ package employee
 
 import (
 	"time"
-	"timeCardSimple/domain/id"
+	"timeCardSimple/app/domain/id"
 )
 
 type Employee struct {

@@ -11,7 +11,7 @@ import (
 	"text/template"
 	"time"
 
-	"timeCardSimple/domain/id"
+	"timeCardSimple/app/domain/id"
 )
 
 func ExecuteTemplateForQueryArgs(ctx context.Context, tq TemplateQueryer, t *template.Template, data any) (context.Context, string, []any, error) {

@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  postgres_timecard:
+    image: postgres:11.6
+    container_name: postgres_timecard
+    environment:
+      - POSTGRES_USER=reedcowan
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=timecard
+    ports:
+      - '5433:5432'

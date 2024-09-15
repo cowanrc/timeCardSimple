@@ -2,8 +2,9 @@ package employee
 
 import (
 	"time"
-	"timeCardSimple/domain/id"
-	"timeCardSimple/lib/clone"
+
+	"timeCardSimple/app/domain/id"
+	"timeCardSimple/app/lib/clone"
 )
 
 type Options struct {

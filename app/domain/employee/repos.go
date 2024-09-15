@@ -2,10 +2,10 @@ package employee
 
 import (
 	"context"
-	"timeCardSimple/domain/id"
+	"timeCardSimple/app/domain/id"
 )
 
-//go:generate go run github.com/golang/mock/mockgen -package employeetest -destination employeetest/mock_test_repo.go timeCardSimple/domain/employee Repo
+//go:generate go run github.com/golang/mock/mockgen -package employeetest -destination employeetest/mock_test_repo.go timeCardSimple/app/domain/employee Repo
 
 // QueryRepo provides the methods for querying Users in the application.
 type QueryRepo interface {
