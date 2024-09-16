@@ -1,4 +1,4 @@
-package sqlrepov
+package sqlrepo
 
 type ErrorDialect interface {
 	NormalizeSQLError(error) error

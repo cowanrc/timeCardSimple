@@ -41,10 +41,14 @@ func (s *Service) CreateEmployee(ctx context.Context, createParams employee.Crea
 	if err := s.employeeRepo.AddEmployee(ctx, e); err != nil {
 		return nil, err
 	}
+
+	return e, nil
 }
 
 func (s *Service) DeleteEmployee(ctx context.Context, employeeID id.ID) error {
 	if err := s.employeeRepo.RemoveEmployee(ctx, employeeID); err != nil {
 		return err
 	}
+
+	return nil
 }
