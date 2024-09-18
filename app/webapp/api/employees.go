@@ -1,28 +1,34 @@
 package api
 
 import (
+	"log"
 	"net/http"
+	"timeCardSimple/app/domain/employee"
+	"timeCardSimple/app/webapp/api/form"
 
-	"github.com/gogolfing/httpmux"
+	"github.com/labstack/echo/v4"
 )
 
-const employeeID = "employee_id"
+func (a *API) CreateEmployeeHandler(ctx echo.Context) error {
+	f := &form.CreateEmployee{}
 
-func (a *API) registerEmployee(route *httpmux.Route) *httpmux.Route {
-	route.
-		PostFunc(a.createEmployee)
+	if err := ctx.Bind(f); err != nil {
+		restErr := NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
+	}
 
-	employeeRoute := route.SubRoute("/:" + employeeID).
-		DeleteFunc(a.deleteEmployee)
+	newE := employee.CreateParams{
+		FirstName: f.FirstName,
+		LastName:  f.LastName,
+		Email:     f.Email,
+	}
 
-	return employeeRoute
+	newEmployee, err := a.EmployeeSVC.CreateEmployee(ctx.Request().Context(), newE)
+	if err != nil {
+		log.Println("ERROR: ", err)
+		restErr := NewBadRequestError("error creating a employee")
+		ctx.JSON(restErr.Status, restErr)
+	}
 
-}
-
-func (a *API) createEmployee(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func (a *API) deleteEmployee(w http.ResponseWriter, r *http.Request) {
-
+	return ctx.JSON(http.StatusCreated, newEmployee)
 }

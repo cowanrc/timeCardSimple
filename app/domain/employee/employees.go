@@ -15,21 +15,21 @@ type CreateParams struct {
 	Email     string
 }
 
-// CreateParamsWithPasswordStrings are the
-// externally-facing parameters that include
-// fields for a user-provided password.
-type CreateParamsWithPasswordStrings struct {
-	CreateParams
-	Password        string
-	ConfirmPassword string
-}
+// // CreateParamsWithPasswordStrings are the
+// // externally-facing parameters that include
+// // fields for a user-provided password.
+// type CreateParamsWithPasswordStrings struct {
+// 	CreateParams
+// 	Password        string
+// 	ConfirmPassword string
+// }
 
-type CreateParamsWithPasswordHash struct {
-	CreateParams
-	PasswordHash []byte
-}
+// type CreateParamsWithPasswordHash struct {
+// 	CreateParams
+// 	PasswordHash []byte
+// }
 
-func New(createParams CreateParamsWithPasswordHash) (*Employee, error) {
+func New(createParams CreateParams) (*Employee, error) {
 	employeeID, err := id.New()
 	if err != nil {
 		return nil, err
@@ -38,13 +38,13 @@ func New(createParams CreateParamsWithPasswordHash) (*Employee, error) {
 	now := time.Now()
 
 	return NewWithOptions(Options{
-		ID:           employeeID,
-		FirstName:    createParams.FirstName,
-		LastName:     createParams.LastName,
-		Email:        createParams.Email,
-		CreatedAt:    now,
-		UpdatedAt:    now,
-		PasswordHash: createParams.PasswordHash,
+		ID:        employeeID,
+		FirstName: createParams.FirstName,
+		LastName:  createParams.LastName,
+		Email:     createParams.Email,
+		CreatedAt: now,
+		UpdatedAt: now,
+		// PasswordHash: createParams.PasswordHash,
 	})
 }
 

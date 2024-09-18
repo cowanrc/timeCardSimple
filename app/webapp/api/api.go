@@ -3,23 +3,15 @@ package api
 import (
 	"timeCardSimple/app/domain/employee"
 
-	"github.com/gogolfing/httpmux"
+	"github.com/labstack/echo/v4"
 )
 
 type API struct {
+	Repos       *Repos `valid:"required"`
 	EmployeeSVC employee.Service
 }
 
-func (a *API) RegisterRoutes() *httpmux.Mux {
-	mux := newMux()
+func (a *API) RegisterRoutes(e *echo.Echo) {
+	e.POST("/employees", a.CreateEmployeeHandler)
 
-	a.registerEmployee(mux.SubRoute("/employees"))
-
-	return mux
-
-}
-
-func newMux() *httpmux.Mux {
-	mux := httpmux.New()
-	return mux
 }

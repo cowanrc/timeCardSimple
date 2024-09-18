@@ -8,6 +8,6 @@ import (
 )
 
 type Service interface {
-	CreateEmployee(ctx context.Context, createParams CreateParamsWithPasswordStrings) (*Employee, error)
+	CreateEmployee(ctx context.Context, createParams CreateParams) (*Employee, error)
 	DeleteEmployee(ctx context.Context, employeeID id.ID) error
 }
