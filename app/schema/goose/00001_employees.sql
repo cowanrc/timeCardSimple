@@ -1,6 +1,11 @@
 -- +goose Up
 -- +goose StatementBegin
 
+create extension if
+not
+exists "citext"
+;
+
 create table employees (
 	id uuid not null,
 	first_name character varying(256) default ''::character varying,

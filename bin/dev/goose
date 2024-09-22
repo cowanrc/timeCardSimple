@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export PGDATABASE=timecard
+export DATABASE_URL="postgres://reedcowan:postgres@localhost:5433/timecard?sslmode=disable"
+export GOOSE_MIGRATION_DIR=schema/goose
+export GOOSE_DRIVER=postgres
+export GOOSE_DBSTRING=$DATABASE_URL
+
+
+goose -dir ./app/schema/goose/ "${@}"

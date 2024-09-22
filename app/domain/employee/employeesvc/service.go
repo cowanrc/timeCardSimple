@@ -2,6 +2,7 @@ package employeesvc
 
 import (
 	"context"
+	"log"
 	"timeCardSimple/app/domain/employee"
 	"timeCardSimple/app/domain/id"
 )
@@ -42,6 +43,8 @@ func (s *Service) CreateEmployee(ctx context.Context, createParams employee.Crea
 	if err := s.employeeRepo.AddEmployee(ctx, e); err != nil {
 		return nil, err
 	}
+
+	log.Println("E: ", e)
 
 	return e, nil
 }
