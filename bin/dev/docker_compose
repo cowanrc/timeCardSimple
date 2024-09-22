@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Create a base array with the main docker-compose file
+compose_files=("-f" "docker-compose.yml")
+
+echo "IN HERE"
+
+# # Pass any additional arguments to docker-compose (e.g., 'up', 'down', etc.)
+# exec docker-compose "${compose_files[@]}" "${@}"
+
+docker-compose "${compose_files[@]}" "${@}"
+
+echo "Command finished"

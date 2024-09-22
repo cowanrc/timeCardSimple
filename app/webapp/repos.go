@@ -35,17 +35,13 @@ func BuildRepos() (*sql.DB, *Repos, error) {
 
 func buildDb() (*sql.DB, error) {
 	dbConn := os.Getenv(datbaseEnv)
-	log.Println("DBCOMNN: ", dbConn)
 	u, err := url.Parse(dbConn)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("STRING: ", u)
-
 	db, err := sql.Open("postgres", u.String())
 	if err != nil {
-		log.Println("HERE")
 		return nil, err
 	}
 

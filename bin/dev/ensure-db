@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo "Ensuring the database is running..."
+
+for i in {0..9}; do
+./bin/dev/docker_compose exec -T postgres_timecard psql -U reedcowan -d timecard -c 'SELECT CURRENT_TIMESTAMP;' > /dev/null
+    retval=$?
+    if [[ ${retval} -eq 0 ]]; then
+        exit 0
+    fi
+    sleep 2
+done
+
+exit 1

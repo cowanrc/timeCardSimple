@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 	"timeCardSimple/app/domain/employee"
 	"timeCardSimple/app/domain/id"
 	"timeCardSimple/app/domain/logger"
@@ -32,10 +31,8 @@ func (r *Repo) GetEmployeeByEmail(ctx context.Context, email string) (*employee.
 	return nil, nil
 }
 func (r *Repo) AddEmployee(ctx context.Context, employee *employee.Employee) error {
-	// Use context-aware queries and reusing prepared statements
 	query := queries.InsertEmployee
 
-	// Use named parameters for better readability if supported
 	_, err := r.sqlRepo.ExecContext(ctx, query,
 		employee.ID().String(),
 		employee.FirstName(),
@@ -47,10 +44,9 @@ func (r *Repo) AddEmployee(ctx context.Context, employee *employee.Employee) err
 
 	if err != nil {
 		logger.Error("error when trying to save employee", err)
-		return fmt.Errorf("could not save employee: %w", err) // Wrapping error for better tracing
+		return fmt.Errorf("could not save employee: %w", err)
 	}
 
-	log.Println("SUCCESSFUL AT DB")
 	return nil
 }
 

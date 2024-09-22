@@ -1,14 +1,34 @@
+# #!/bin/bash
+
+# # Start the Docker container using docker-compose
+# docker-compose up -d
+
+# # Wait a few seconds to ensure PostgreSQL container is up and running
+# sleep 5
+
+# # Start the Go application
+# echo "Starting Timecard Go application..."
+# go run main.go
+
+# # Print a message indicating both services are running
+# echo "Timecard application and PostgreSQL are running."
+
+
 #!/bin/bash
 
-# Start the PostgreSQL container using the Docker Compose setup
-echo "Starting PostgreSQL container for Timecard application..."
-./bin/dev/psql # Assuming this script already exports the necessary variables
+# Exit on any error
+set -e
 
-# Wait a few seconds to ensure PostgreSQL container is up and running
-sleep 5
+# Start the Docker container using docker-compose
+echo "Starting Docker containers..."
+docker-compose up -d
+
+# Wait for the database to be ready
+echo "Waiting for the PostgreSQL container to be ready..."
+./bin/dev/ensure-db
 
 # Start the Go application
-echo "Starting Timecard Go application..."
+echo "Starting the Timecard Go application..."
 go run main.go
 
 # Print a message indicating both services are running

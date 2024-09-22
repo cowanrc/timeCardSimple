@@ -1,14 +1,18 @@
-#!/bin/bash
+# #!/bin/bash
 
-# Export necessary environment variables
 export PGDATABASE=timecard
 export DATABASE_URL="postgres://reedcowan:postgres@localhost:5433/timecard?sslmode=disable"
 export GOOSE_MIGRATION_DIR=schema/goose
 export GOOSE_DRIVER=postgres
 export GOOSE_DBSTRING=$DATABASE_URL
 
-# Start the Docker container using docker-compose
-docker-compose up -d
+# Exit on any error
+set -e
 
-# Print a message to indicate that the container has started
-echo "Timecard PostgreSQL container started."
+# Ensure the database is running
+echo "Ensuring the database is running..."
+./bin/dev/ensure-db
+
+# Connect to the PostgreSQL container and run psql
+echo "Connecting to the PostgreSQL database..."
+docker exec -it postgres_timecard psql -U reedcowan -d timecard
