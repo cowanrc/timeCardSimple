@@ -3,35 +3,9 @@ package employees
 import (
 	"net/http"
 	"timeCardSimple/api"
-	"timeCardSimple/database"
-	"timeCardSimple/errors"
 
 	"github.com/labstack/echo/v4"
 )
-
-func CreateEmployeeHandler(ctx echo.Context, isTesting bool) error {
-	var employee database.Employee
-
-	if err := ctx.Bind(&employee); err != nil {
-		restErr := errors.NewBadRequestError("invalid json body")
-		ctx.JSON(restErr.Status, restErr)
-		return err
-	}
-
-	//improper use of unit test handling
-	if isTesting {
-		m := mockEmployee(mockEmployeeString)
-		return ctx.JSON(http.StatusCreated, m)
-	}
-
-	result, saveErr := EmployeeService.CreateEmployee(employee)
-	if saveErr != nil {
-		ctx.JSON(saveErr.Status, saveErr)
-		return nil
-	}
-
-	return ctx.JSON(http.StatusCreated, result)
-}
 
 func GetAllEmployeesHandler(ctx echo.Context, isTesting bool) error {
 	employees, getErr := EmployeeService.GetAllEmployees()

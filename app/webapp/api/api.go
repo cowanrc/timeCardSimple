@@ -3,7 +3,7 @@ package api
 import (
 	"timeCardSimple/app/domain/employee"
 
-	"github.com/labstack/echo/v4"
+	"github.com/go-chi/chi"
 )
 
 type API struct {
@@ -11,7 +11,15 @@ type API struct {
 	EmployeeSVC employee.Service
 }
 
-func (a *API) RegisterRoutes(e *echo.Echo) {
-	e.POST("/employees", a.CreateEmployeeHandler)
+func (a *API) RegisterRoutes(r chi.Router) {
+	r.Route("/employees", func(r chi.Router) {
+		r.Post("/", a.CreateEmployee)
+
+		r.Route("/{employeeID}", func(r chi.Router) {
+			r.Use(a.EmployeeCTX)
+			r.Get("/", a.GetEmployeeByID)
+			// r.Delete("/", a.DeleteEmployee)
+		})
+	})
 
 }

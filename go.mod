@@ -11,6 +11,8 @@ require (
 )
 
 require (
+	github.com/go-chi/chi v1.5.5 // indirect
+	github.com/go-chi/chi/v5 v5.1.0 // indirect
 	github.com/gogolfing/httpmux v0.0.0-20170610182827-a1853085894f // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect

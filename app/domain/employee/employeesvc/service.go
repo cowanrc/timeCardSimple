@@ -46,6 +46,15 @@ func (s *Service) CreateEmployee(ctx context.Context, createParams employee.Crea
 	return e, nil
 }
 
+func (s *Service) GetEmployeeByID(ctx context.Context, employeeID id.ID) (*employee.Employee, error) {
+	e, err := s.employeeRepo.GetEmployeeByID(ctx, employeeID)
+	if err != nil {
+		return nil, err
+	}
+
+	return e, nil
+}
+
 func (s *Service) DeleteEmployee(ctx context.Context, employeeID id.ID) error {
 	if err := s.employeeRepo.RemoveEmployee(ctx, employeeID); err != nil {
 		return err

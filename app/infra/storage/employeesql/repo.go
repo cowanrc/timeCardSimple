@@ -8,6 +8,7 @@ import (
 	"timeCardSimple/app/domain/id"
 	"timeCardSimple/app/domain/logger"
 	"timeCardSimple/app/infra/storage/employeesql/queries"
+	"timeCardSimple/app/infra/storage/sqlrepo"
 
 	_ "github.com/lib/pq"
 )
@@ -24,7 +25,19 @@ func New(sqlRepo *sql.DB) *Repo {
 }
 
 func (r *Repo) GetEmployeeByID(ctx context.Context, employeeID id.ID) (*employee.Employee, error) {
-	return nil, nil
+	query := queries.GetEmployeeByID
+
+	row := r.sqlRepo.QueryRowContext(ctx, query, employeeID.GoString())
+
+	options, err := scanEmployeeOptions(row)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("employee with ID %v not found", employeeID)
+		}
+		return nil, err
+	}
+
+	return employee.NewWithOptions(options)
 }
 
 func (r *Repo) GetEmployeeByEmail(ctx context.Context, email string) (*employee.Employee, error) {
@@ -52,4 +65,18 @@ func (r *Repo) AddEmployee(ctx context.Context, employee *employee.Employee) err
 
 func (r *Repo) RemoveEmployee(ctx context.Context, employeeID id.ID) error {
 	return nil
+}
+
+func scanEmployeeOptions(rs *sql.Row) (options employee.Options, err error) {
+	err = rs.Scan(
+		sqlrepo.ScanIntoID(&options.ID),
+		&options.FirstName,
+		&options.LastName,
+		&options.Email,
+		&options.CreatedAt,
+		&options.UpdatedAt,
+		&options.PasswordHash,
+	)
+
+	return
 }

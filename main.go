@@ -2,17 +2,20 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"timeCardSimple/app/webapp"
 
-	"github.com/labstack/echo/v4"
+	"github.com/go-chi/chi"
 )
 
 func main() {
 	log.Printf("Creating your time card application")
-	e := echo.New()
+	r := chi.NewRouter()
 
-	e.File("/swaggerui", "ui/index.html")
-	e.Static("/swaggerui", "ui")
+	// e := echo.New()
+
+	// r.File("/swaggerui", "ui/index.html")
+	// e.Static("/swaggerui", "ui")
 
 	closer, repos, err := webapp.BuildRepos()
 	if err != nil {
@@ -25,9 +28,9 @@ func main() {
 		log.Fatalf("error building application")
 	}
 
-	app.RegisterRoutes(e)
+	app.RegisterRoutes(r)
 
 	log.Printf("listening on port 9080")
-	e.Logger.Fatal((e.Start(":9080")))
+	http.ListenAndServe(":9080", r)
 
 }

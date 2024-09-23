@@ -9,5 +9,6 @@ import (
 
 type Service interface {
 	CreateEmployee(ctx context.Context, createParams CreateParams) (*Employee, error)
+	GetEmployeeByID(ctx context.Context, employeeID id.ID) (*Employee, error)
 	DeleteEmployee(ctx context.Context, employeeID id.ID) error
 }
