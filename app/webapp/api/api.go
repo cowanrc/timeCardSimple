@@ -18,7 +18,7 @@ func (a *API) RegisterRoutes(r chi.Router) {
 		r.Route("/{employeeID}", func(r chi.Router) {
 			r.Use(a.EmployeeCTX)
 			r.Get("/", a.GetEmployeeByID)
-			// r.Delete("/", a.DeleteEmployee)
+			r.Delete("/", a.DeleteEmployee)
 		})
 	})
 

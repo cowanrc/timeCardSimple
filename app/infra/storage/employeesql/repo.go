@@ -64,6 +64,13 @@ func (r *Repo) AddEmployee(ctx context.Context, employee *employee.Employee) err
 }
 
 func (r *Repo) RemoveEmployee(ctx context.Context, employeeID id.ID) error {
+	query := queries.RemoveEmployee
+
+	_, err := r.sqlRepo.ExecContext(ctx, query, employeeID.GoString())
+	if err != nil {
+		logger.Error("error removing employee", err)
+		return fmt.Errorf("could not remove employee: %w", err)
+	}
 	return nil
 }
 

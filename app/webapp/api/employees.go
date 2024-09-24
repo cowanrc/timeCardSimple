@@ -90,6 +90,18 @@ func (a *API) GetEmployeeByID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (a *API) DeleteEmployee(w http.ResponseWriter, r *http.Request) {
-// 	ctx := r.Context()
-// }
+func (a *API) DeleteEmployee(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	employeeID, err := id.ParseString(chi.URLParam(r, "employeeID"))
+	if err != nil {
+		NewBadRequestError("Error parsing employeeID")
+		return
+	}
+
+	if err = a.EmployeeSVC.DeleteEmployee(ctx, employeeID); err != nil {
+		http.Error(w, "error deleting employee", http.StatusBadRequest)
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+}
