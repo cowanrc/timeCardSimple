@@ -24,6 +24,49 @@ func New(sqlRepo *sql.DB) *Repo {
 	}
 }
 
+func (r *Repo) GetAllEmployees(ctx context.Context) ([]*employee.Employee, error) {
+	query := queries.GetAllEmployees
+
+	rows, err := r.sqlRepo.QueryContext(ctx, query)
+	if err != nil {
+		logger.Error("error getting all employees", err)
+		return nil, fmt.Errorf("could not get all employees: %w", err)
+	}
+	defer rows.Close()
+
+	var employees []*employee.Employee
+	for rows.Next() {
+		var options employee.Options
+		err := rows.Scan(
+			sqlrepo.ScanIntoID(&options.ID),
+			&options.FirstName,
+			&options.LastName,
+			&options.Email,
+			&options.CreatedAt,
+			&options.UpdatedAt,
+			&options.PasswordHash,
+		)
+		if err != nil {
+			logger.Error("error scanning employee row", err)
+			return nil, fmt.Errorf("could not scan employee row: %w", err)
+		}
+
+		e, err := employee.NewWithOptions(options)
+		if err != nil {
+			return nil, fmt.Errorf("could not create employee instance: %w", err)
+		}
+
+		employees = append(employees, e)
+	}
+
+	if err := rows.Err(); err != nil {
+		logger.Error("error during rows iteration", err)
+		return nil, fmt.Errorf("error iterating rows: %w", err)
+	}
+
+	return employees, nil
+}
+
 func (r *Repo) GetEmployeeByID(ctx context.Context, employeeID id.ID) (*employee.Employee, error) {
 	query := queries.GetEmployeeByID
 
