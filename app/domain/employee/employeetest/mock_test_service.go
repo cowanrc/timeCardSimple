@@ -64,3 +64,18 @@ func (mr *MockServiceMockRecorder) DeleteEmployee(arg0, arg1 interface{}) *gomoc
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteEmployee", reflect.TypeOf((*MockService)(nil).DeleteEmployee), arg0, arg1)
 }
+
+// GetEmployeeByID mocks base method.
+func (m *MockService) GetEmployeeByID(arg0 context.Context, arg1 id.ID) (*employee.Employee, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetEmployeeByID", arg0, arg1)
+	ret0, _ := ret[0].(*employee.Employee)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetEmployeeByID indicates an expected call of GetEmployeeByID.
+func (mr *MockServiceMockRecorder) GetEmployeeByID(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmployeeByID", reflect.TypeOf((*MockService)(nil).GetEmployeeByID), arg0, arg1)
+}
