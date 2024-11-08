@@ -36,8 +36,7 @@ func (a *API) EmployeeCTX(next http.Handler) http.Handler {
 
 func (a *API) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-
-	
+}
 
 func (a *API) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
