@@ -46,6 +46,10 @@ func (s *Service) CreateEmployee(ctx context.Context, createParams employee.Crea
 	return e, nil
 }
 
+func (s *Service) GetEmployees(ctx context.Context) (*[]employee.Employee, error) {
+	return nil, nil
+}
+
 func (s *Service) GetEmployeeByID(ctx context.Context, employeeID id.ID) (*employee.Employee, error) {
 	e, err := s.employeeRepo.GetEmployeeByID(ctx, employeeID)
 	if err != nil {

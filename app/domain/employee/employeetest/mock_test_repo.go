@@ -50,6 +50,21 @@ func (mr *MockRepoMockRecorder) AddEmployee(arg0, arg1 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEmployee", reflect.TypeOf((*MockRepo)(nil).AddEmployee), arg0, arg1)
 }
 
+// GetAllEmployees mocks base method.
+func (m *MockRepo) GetAllEmployees(arg0 context.Context) ([]*employee.Employee, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllEmployees", arg0)
+	ret0, _ := ret[0].([]*employee.Employee)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllEmployees indicates an expected call of GetAllEmployees.
+func (mr *MockRepoMockRecorder) GetAllEmployees(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllEmployees", reflect.TypeOf((*MockRepo)(nil).GetAllEmployees), arg0)
+}
+
 // GetEmployeeByEmail mocks base method.
 func (m *MockRepo) GetEmployeeByEmail(arg0 context.Context, arg1 string) (*employee.Employee, error) {
 	m.ctrl.T.Helper()
@@ -78,21 +93,6 @@ func (m *MockRepo) GetEmployeeByID(arg0 context.Context, arg1 id.ID) (*employee.
 func (mr *MockRepoMockRecorder) GetEmployeeByID(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmployeeByID", reflect.TypeOf((*MockRepo)(nil).GetEmployeeByID), arg0, arg1)
-}
-
-// GetEmployees mocks base method.
-func (m *MockRepo) GetEmployees(arg0 context.Context) ([]*employee.Employee, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEmployees", arg0)
-	ret0, _ := ret[0].([]*employee.Employee)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetEmployees indicates an expected call of GetEmployees.
-func (mr *MockRepoMockRecorder) GetEmployees(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmployees", reflect.TypeOf((*MockRepo)(nil).GetEmployees), arg0)
 }
 
 // RemoveEmployee mocks base method.

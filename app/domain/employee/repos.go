@@ -11,7 +11,7 @@ import (
 type QueryRepo interface {
 	GetEmployeeByID(ctx context.Context, employeeID id.ID) (*Employee, error)
 	GetEmployeeByEmail(ctx context.Context, email string) (*Employee, error)
-	GetEmployees(ctx context.Context) ([]*Employee, error)
+	GetAllEmployees(ctx context.Context) ([]*Employee, error)
 }
 
 type Repo interface {
