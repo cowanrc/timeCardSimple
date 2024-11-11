@@ -14,7 +14,7 @@ type API struct {
 func (a *API) RegisterRoutes(r chi.Router) {
 	r.Route("/employees", func(r chi.Router) {
 		r.Post("/", a.CreateEmployee)
-		// r.Get("/", a.GetEmployees)
+		r.Get("/", a.GetEmployees)
 
 		r.Route("/{employeeID}", func(r chi.Router) {
 			r.Use(a.EmployeeCTX)

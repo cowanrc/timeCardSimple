@@ -8,7 +8,7 @@ import (
 )
 
 type Service interface {
-	GetEmployees(ctx context.Context) (*[]Employee, error)
+	GetEmployees(ctx context.Context) ([]*Employee, error)
 	CreateEmployee(ctx context.Context, createParams CreateParams) (*Employee, error)
 	GetEmployeeByID(ctx context.Context, employeeID id.ID) (*Employee, error)
 	DeleteEmployee(ctx context.Context, employeeID id.ID) error

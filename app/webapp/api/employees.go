@@ -34,9 +34,24 @@ func (a *API) EmployeeCTX(next http.Handler) http.Handler {
 	})
 }
 
-// func (a *API) GetEmployees(w http.ResponseWriter, r *http.Request) {
-// 	ctx := r.Context()
-// }
+func (a *API) GetEmployees(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	employees, err := a.EmployeeSVC.GetEmployees(ctx)
+	if err != nil {
+		http.Error(w, "error getting all employees", http.StatusBadRequest)
+	}
+
+	transfer, err := dto.Transform(employees)
+	if err != nil {
+		http.Error(w, "error transforming employees", http.StatusBadRequest)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(transfer); err != nil {
+		http.Error(w, "error encoding response", http.StatusInternalServerError)
+	}
+}
 
 func (a *API) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
