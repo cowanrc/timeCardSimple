@@ -5,6 +5,11 @@
 package timecardtest
 
 import (
+	context "context"
+	reflect "reflect"
+	id "timeCardSimple/app/domain/id"
+	timecard "timeCardSimple/app/domain/timecard"
+
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -29,4 +34,19 @@ func NewMockRepo(ctrl *gomock.Controller) *MockRepo {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 	return m.recorder
+}
+
+// CreateEmployeeTimecard mocks base method.
+func (m *MockRepo) CreateEmployeeTimecard(arg0 context.Context, arg1 id.ID) (timecard.Timecard, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateEmployeeTimecard", arg0, arg1)
+	ret0, _ := ret[0].(timecard.Timecard)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateEmployeeTimecard indicates an expected call of CreateEmployeeTimecard.
+func (mr *MockRepoMockRecorder) CreateEmployeeTimecard(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEmployeeTimecard", reflect.TypeOf((*MockRepo)(nil).CreateEmployeeTimecard), arg0, arg1)
 }
