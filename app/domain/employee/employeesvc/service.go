@@ -4,21 +4,25 @@ import (
 	"context"
 	"timeCardSimple/app/domain/employee"
 	"timeCardSimple/app/domain/id"
+	"timeCardSimple/app/domain/timecard"
 )
 
 var _ employee.Service = &Service{}
 
 type Service struct {
 	employeeRepo employee.Repo
+	timecardRepo timecard.Repo
 	// passworder   password.Passworder
 }
 
 func New(
 	employeeRepo employee.Repo,
+	timecardRepo timecard.Repo,
 	// passworder password.Passworder,
 ) *Service {
 	return &Service{
 		employeeRepo: employeeRepo,
+		timecardRepo: timecardRepo,
 		// passworder:   passworder,
 	}
 }
@@ -40,6 +44,16 @@ func (s *Service) CreateEmployee(ctx context.Context, createParams employee.Crea
 	}
 
 	if err := s.employeeRepo.AddEmployee(ctx, e); err != nil {
+		return nil, err
+	}
+
+	tc, err := timecard.New(e.ID())
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.timecardRepo.CreateEmployeeTimecard(ctx, tc)
+	if err != nil {
 		return nil, err
 	}
 

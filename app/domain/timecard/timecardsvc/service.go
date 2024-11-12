@@ -20,6 +20,6 @@ func New(
 	}
 }
 
-func (s *Service) CreateEmployeeTimecard(ctx context.Context, employeeID id.ID) (*timecard.Timecard, error) {
+func (s *Service) CreateTimecard(ctx context.Context, employeeID id.ID) (*timecard.Timecard, error) {
 	return nil, nil
 }

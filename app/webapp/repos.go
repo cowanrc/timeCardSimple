@@ -6,7 +6,9 @@ import (
 	"net/url"
 	"os"
 	"timeCardSimple/app/domain/employee"
+	"timeCardSimple/app/domain/timecard"
 	"timeCardSimple/app/infra/storage/employeesql"
+	"timeCardSimple/app/infra/storage/timecardsql"
 
 	_ "github.com/lib/pq"
 )
@@ -18,6 +20,7 @@ const (
 
 type Repos struct {
 	Employee employee.Repo
+	Timecard timecard.Repo
 }
 
 func BuildRepos() (*sql.DB, *Repos, error) {
@@ -28,6 +31,7 @@ func BuildRepos() (*sql.DB, *Repos, error) {
 
 	repos := &Repos{
 		Employee: employeesql.New(db),
+		Timecard: timecardsql.New(db),
 	}
 
 	return db, repos, nil

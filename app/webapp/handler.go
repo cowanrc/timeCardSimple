@@ -9,7 +9,10 @@ import (
 func BuildRoot(
 	repos *Repos,
 ) (*api.API, error) {
-	employeeService := employeesvc.New(repos.Employee)
+	employeeService := employeesvc.New(
+		repos.Employee,
+		repos.Timecard,
+	)
 
 	api, err := buildAPI(
 		repos,
@@ -31,6 +34,7 @@ func buildAPI(
 	a := &api.API{
 		Repos: &api.Repos{
 			Employees: repos.Employee,
+			Timecard:  repos.Timecard,
 		},
 		EmployeeSVC: employeeService,
 	}

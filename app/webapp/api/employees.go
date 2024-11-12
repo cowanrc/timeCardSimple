@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"timeCardSimple/app/domain/employee"
@@ -36,7 +35,6 @@ func (a *API) EmployeeCTX(next http.Handler) http.Handler {
 }
 
 func (a *API) GetEmployees(w http.ResponseWriter, r *http.Request) {
-	log.Println("Getting employees")
 	ctx := r.Context()
 	employees, err := a.EmployeeSVC.GetEmployees(ctx)
 	if err != nil {
@@ -56,7 +54,6 @@ func (a *API) GetEmployees(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) CreateEmployee(w http.ResponseWriter, r *http.Request) {
-	log.Println("Creating")
 	ctx := r.Context()
 	f := &form.CreateEmployee{}
 

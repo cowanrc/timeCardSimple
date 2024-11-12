@@ -8,6 +8,7 @@ import (
 	"timeCardSimple/app/domain/employee"
 	"timeCardSimple/app/domain/employee/employeetest"
 	"timeCardSimple/app/domain/id/idtest"
+	"timeCardSimple/app/domain/timecard/timecardtest"
 
 	"github.com/golang/mock/gomock"
 )
@@ -58,8 +59,12 @@ func Test_CreateEmployee_Success(t *testing.T) {
 	employeeRepo := employeetest.NewMockRepo(mc)
 	employeeRepo.EXPECT().AddEmployee(gomock.Any(), gomock.Any()).Return(nil)
 
+	timecardRepo := timecardtest.NewMockRepo(mc)
+	timecardRepo.EXPECT().CreateEmployeeTimecard(gomock.Any(), gomock.Any()).Return(nil)
+
 	s := &Service{
 		employeeRepo: employeeRepo,
+		timecardRepo: timecardRepo,
 	}
 
 	createParams := createEmployeeParams()

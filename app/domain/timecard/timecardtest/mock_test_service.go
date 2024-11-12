@@ -36,17 +36,17 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
-// CreateEmployeeTimecard mocks base method.
-func (m *MockService) CreateEmployeeTimecard(arg0 context.Context, arg1 id.ID) (*timecard.Timecard, error) {
+// CreateTimecard mocks base method.
+func (m *MockService) CreateTimecard(arg0 context.Context, arg1 id.ID) (*timecard.Timecard, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateEmployeeTimecard", arg0, arg1)
+	ret := m.ctrl.Call(m, "CreateTimecard", arg0, arg1)
 	ret0, _ := ret[0].(*timecard.Timecard)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreateEmployeeTimecard indicates an expected call of CreateEmployeeTimecard.
-func (mr *MockServiceMockRecorder) CreateEmployeeTimecard(arg0, arg1 interface{}) *gomock.Call {
+// CreateTimecard indicates an expected call of CreateTimecard.
+func (mr *MockServiceMockRecorder) CreateTimecard(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEmployeeTimecard", reflect.TypeOf((*MockService)(nil).CreateEmployeeTimecard), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTimecard", reflect.TypeOf((*MockService)(nil).CreateTimecard), arg0, arg1)
 }
