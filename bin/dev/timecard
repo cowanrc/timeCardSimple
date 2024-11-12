@@ -11,6 +11,9 @@ docker-compose up -d
 echo "Waiting for the PostgreSQL container to be ready..."
 ./bin/dev/ensure-db
 
+echo "Running goose migration"
+./bin/dev/goose up
+
 # Start the Go application
 echo "Starting the Timecard Go application..."
 exec go run main.go

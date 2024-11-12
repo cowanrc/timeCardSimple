@@ -5,8 +5,9 @@ import (
 	"errors"
 	"log"
 	"testing"
-	"timeCardSimple/App/domain/employee/employeetest"
 	"timeCardSimple/app/domain/employee"
+	"timeCardSimple/app/domain/employee/employeetest"
+	"timeCardSimple/app/domain/id/idtest"
 
 	"github.com/golang/mock/gomock"
 )
@@ -117,5 +118,62 @@ func Test_GetEmployees_Sucess(t *testing.T) {
 
 	if len(receivedEmployees) != len(expectedEmployees) {
 		t.Errorf("incorrect number of employees returned, receivced: %v, expected: %v", len(receivedEmployees), len(expectedEmployees))
+	}
+}
+
+func Test_GetEmployeeByID_EmployeeNotFoundError(t *testing.T) {
+	mc := gomock.NewController(t)
+	defer mc.Finish()
+
+	employeeID := idtest.MustNew()
+
+	notFoundError := errors.New("employee not found")
+
+	employeeRepo := employeetest.NewMockRepo(mc)
+	employeeRepo.EXPECT().GetEmployeeByID(gomock.Any(), gomock.Any()).Return(nil, notFoundError)
+
+	s := &Service{
+		employeeRepo: employeeRepo,
+	}
+
+	_, err := s.GetEmployeeByID(
+		context.Background(),
+		employeeID,
+	)
+
+	if err != notFoundError {
+		t.Errorf("incorrect error, received: %v, expected: %v", err, notFoundError)
+	}
+}
+
+func Test_GetEmployeeByID_Success(t *testing.T) {
+	mc := gomock.NewController(t)
+	defer mc.Finish()
+
+	createParams := createEmployeeParams()
+
+	employee, err := employee.New(createParams)
+	if err != nil {
+		log.Fatalf("Error creating employee1")
+	}
+
+	employeeRepo := employeetest.NewMockRepo(mc)
+	employeeRepo.EXPECT().GetEmployeeByID(gomock.Any(), gomock.Any()).Return(employee, nil)
+
+	s := &Service{
+		employeeRepo: employeeRepo,
+	}
+
+	e, err := s.employeeRepo.GetEmployeeByID(
+		context.Background(),
+		employee.ID(),
+	)
+
+	if err != nil {
+		t.Errorf("incorrect error, received: %v, expected: %v", err, nil)
+	}
+
+	if e != employee {
+		t.Errorf("incorrect employee, receiverd: %v, expected: %v", employee, e)
 	}
 }
