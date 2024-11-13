@@ -10,9 +10,12 @@ type Timecard struct {
 }
 
 type UpdateParams struct {
-	StartedTime *time.Time
-	EndTime     *time.Time
-	UpdatedAt   time.Time
+	StartTime           *time.Time
+	EndTime             *time.Time
+	Duration            *float64
+	WeekStartDate       *time.Time
+	BiWeeklyPeriodStart *time.Time
+	UpdatedAt           time.Time
 }
 
 func New(employeeID id.ID) (*Timecard, error) {
@@ -39,6 +42,27 @@ func NewWithOptions(options Options) (*Timecard, error) {
 	return &Timecard{
 		options: options,
 	}, nil
+}
+
+func (t *Timecard) UpdateOptions(params UpdateParams) {
+	if params.StartTime != nil {
+		t.options.StartTime = params.StartTime
+	}
+	if params.EndTime != nil {
+		t.options.EndTime = params.EndTime
+	}
+	if params.Duration != nil {
+		t.options.Duration = params.Duration
+	}
+	if params.WeekStartDate != nil {
+		t.options.WeekStartDate = params.WeekStartDate
+	}
+	if params.BiWeeklyPeriodStart != nil {
+		t.options.BiWeeklyPeriodStart = params.BiWeeklyPeriodStart
+	}
+
+	t.options.UpdatedAt = params.UpdatedAt
+
 }
 
 // Options returns the options for the role

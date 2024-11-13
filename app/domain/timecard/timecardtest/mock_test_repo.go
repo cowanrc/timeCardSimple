@@ -7,6 +7,8 @@ package timecardtest
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
+	id "timeCardSimple/app/domain/id"
 	timecard "timeCardSimple/app/domain/timecard"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,6 +37,20 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 	return m.recorder
 }
 
+// ClockInEmployee mocks base method.
+func (m *MockRepo) ClockInEmployee(arg0 context.Context, arg1 id.ID, arg2 time.Time, arg3, arg4 *time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClockInEmployee", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ClockInEmployee indicates an expected call of ClockInEmployee.
+func (mr *MockRepoMockRecorder) ClockInEmployee(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClockInEmployee", reflect.TypeOf((*MockRepo)(nil).ClockInEmployee), arg0, arg1, arg2, arg3, arg4)
+}
+
 // CreateEmployeeTimecard mocks base method.
 func (m *MockRepo) CreateEmployeeTimecard(arg0 context.Context, arg1 *timecard.Timecard) error {
 	m.ctrl.T.Helper()
@@ -47,4 +63,19 @@ func (m *MockRepo) CreateEmployeeTimecard(arg0 context.Context, arg1 *timecard.T
 func (mr *MockRepoMockRecorder) CreateEmployeeTimecard(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEmployeeTimecard", reflect.TypeOf((*MockRepo)(nil).CreateEmployeeTimecard), arg0, arg1)
+}
+
+// GetTimecardByEmployeeID mocks base method.
+func (m *MockRepo) GetTimecardByEmployeeID(arg0 context.Context, arg1 id.ID) (*timecard.Timecard, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTimecardByEmployeeID", arg0, arg1)
+	ret0, _ := ret[0].(*timecard.Timecard)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTimecardByEmployeeID indicates an expected call of GetTimecardByEmployeeID.
+func (mr *MockRepoMockRecorder) GetTimecardByEmployeeID(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTimecardByEmployeeID", reflect.TypeOf((*MockRepo)(nil).GetTimecardByEmployeeID), arg0, arg1)
 }

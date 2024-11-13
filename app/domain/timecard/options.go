@@ -7,12 +7,15 @@ import (
 )
 
 type Options struct {
-	ID         id.ID
-	EmployeeID id.ID
-	StartTime  *time.Time
-	EndTime    *time.Time
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID                  id.ID
+	EmployeeID          id.ID
+	StartTime           *time.Time
+	EndTime             *time.Time
+	Duration            *float64
+	WeekStartDate       *time.Time
+	BiWeeklyPeriodStart *time.Time
+	CreatedAt           time.Time
+	UpdatedAt           time.Time
 }
 
 func (o Options) validate() error {
@@ -36,10 +39,12 @@ func (o Options) validate() error {
 }
 
 func (o Options) deepClone() Options {
-	clonedRole := o
+	clonedOptions := o
 
-	clonedRole.StartTime = clone.Pointer(o.StartTime)
-	clonedRole.EndTime = clone.Pointer(o.EndTime)
+	clonedOptions.StartTime = clone.Pointer(o.StartTime)
+	clonedOptions.EndTime = clone.Pointer(o.EndTime)
+	clonedOptions.Duration = clone.Pointer(o.Duration)
+	clonedOptions.BiWeeklyPeriodStart = clone.Pointer(o.BiWeeklyPeriodStart)
 
-	return clonedRole
+	return clonedOptions
 }

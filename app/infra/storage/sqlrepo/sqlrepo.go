@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"text/template"
+	"time"
 
 	"timeCardSimple/app/domain/id"
 	"timeCardSimple/app/infra/trace"
@@ -188,6 +189,34 @@ type scanID struct {
 
 func ScanIntoID(id *id.ID) *scanID {
 	return &scanID{result: id}
+}
+
+func ScanIntoTime(t **time.Time) ScanFunc[*time.Time] {
+	return func(rs RowScanner) (*time.Time, error) {
+		var scannedTime sql.NullTime
+		if err := rs.Scan(&scannedTime); err != nil {
+			return nil, err
+		}
+		if !scannedTime.Valid {
+			return nil, nil
+		}
+		*t = &scannedTime.Time
+		return *t, nil
+	}
+}
+
+func ScanIntoFloat64(f **float64) ScanFunc[*float64] {
+	return func(rs RowScanner) (*float64, error) {
+		var scannedFloat sql.NullFloat64
+		if err := rs.Scan(&scannedFloat); err != nil {
+			return nil, err
+		}
+		if !scannedFloat.Valid {
+			return nil, nil
+		}
+		*f = &scannedFloat.Float64
+		return *f, nil
+	}
 }
 
 func (sid *scanID) Scan(src any) error {

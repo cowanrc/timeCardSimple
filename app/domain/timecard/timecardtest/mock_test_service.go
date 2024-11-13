@@ -7,6 +7,7 @@ package timecardtest
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 	id "timeCardSimple/app/domain/id"
 	timecard "timeCardSimple/app/domain/timecard"
 
@@ -36,17 +37,17 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
-// CreateTimecard mocks base method.
-func (m *MockService) CreateTimecard(arg0 context.Context, arg1 id.ID) (*timecard.Timecard, error) {
+// ClockIn mocks base method.
+func (m *MockService) ClockIn(arg0 context.Context, arg1 id.ID, arg2 time.Time) (*timecard.Timecard, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTimecard", arg0, arg1)
+	ret := m.ctrl.Call(m, "ClockIn", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*timecard.Timecard)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreateTimecard indicates an expected call of CreateTimecard.
-func (mr *MockServiceMockRecorder) CreateTimecard(arg0, arg1 interface{}) *gomock.Call {
+// ClockIn indicates an expected call of ClockIn.
+func (mr *MockServiceMockRecorder) ClockIn(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTimecard", reflect.TypeOf((*MockService)(nil).CreateTimecard), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClockIn", reflect.TypeOf((*MockService)(nil).ClockIn), arg0, arg1, arg2)
 }
