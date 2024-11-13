@@ -57,3 +57,7 @@ func NewWithOptions(options Options) (*Employee, error) {
 		options: options,
 	}, nil
 }
+
+func (e *Employee) Options() Options {
+	return e.options.DeepClone()
+}
