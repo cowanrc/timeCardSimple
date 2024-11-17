@@ -8,10 +8,10 @@ import (
 type Options struct {
 	ID         id.ID
 	EmployeeID id.ID
-	StartDate  time.Time
+	StartDate  *time.Time
 	EndDate    *time.Time
-	DaysWorked int64
-	TotalHours int64
+	DaysWorked uint64
+	TotalHours uint64
 }
 
 func (o *Options) validate() error {

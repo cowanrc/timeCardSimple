@@ -18,7 +18,7 @@ func New(employeeID id.ID, startDate time.Time) (*WeeklySummary, error) {
 	return NewWithOptions(Options{
 		ID:         id,
 		EmployeeID: employeeID,
-		StartDate:  startDate,
+		StartDate:  &startDate,
 		DaysWorked: 0,
 		TotalHours: 0,
 	})

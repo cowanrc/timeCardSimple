@@ -1,7 +1,6 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 
@@ -12,27 +11,6 @@ import (
 
 	"github.com/go-chi/chi"
 )
-
-type employeeContextKey struct{}
-
-// EmployeCTX gets a specific employee with ID to be used in other subroutes
-func (a *API) EmployeeCTX(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		employeeID, err := id.ParseString(chi.URLParam(r, "employeeID"))
-		if err != nil {
-			NewBadRequestError("Error parsing employeeID")
-			return
-		}
-
-		employee, err := a.EmployeeSVC.GetEmployeeByID(r.Context(), employeeID)
-		if err != nil {
-			http.Error(w, http.StatusText(404), 404)
-			return
-		}
-		ctx := context.WithValue(r.Context(), employeeContextKey{}, employee)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
 
 func (a *API) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()

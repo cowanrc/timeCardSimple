@@ -7,7 +7,7 @@ import (
 	"timeCardSimple/app/domain/employee"
 	"timeCardSimple/app/domain/id"
 	"timeCardSimple/app/domain/logger"
-	"timeCardSimple/app/infra/storage/employeesql/queries"
+	"timeCardSimple/app/infra/storage/domainsql/employeesql/queries"
 	"timeCardSimple/app/infra/storage/sqlrepo"
 
 	_ "github.com/lib/pq"

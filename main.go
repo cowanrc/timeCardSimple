@@ -3,12 +3,16 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"timeCardSimple/app/webapp"
 
 	"github.com/go-chi/chi"
 )
 
 func main() {
+	log.SetOutput(os.Stdout)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	log.Printf("Creating your time card application")
 	r := chi.NewRouter()
 

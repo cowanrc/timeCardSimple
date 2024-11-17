@@ -1,4 +1,4 @@
-# #!/bin/bash
+#!/bin/bash
 
 # Exit on any error
 set -e
@@ -14,6 +14,9 @@ echo "Waiting for the PostgreSQL container to be ready..."
 echo "Running goose migration"
 ./bin/dev/goose up
 
-# Start the Go application
+# Flush stdout and stderr to ensure logs are not buffered
+export GODEBUG="asyncpreemptoff=1"
+
+# Start the Go application and flush logs explicitly
 echo "Starting the Timecard Go application..."
-exec go run main.go
+go run main.go 2>&1 | tee /dev/stderr

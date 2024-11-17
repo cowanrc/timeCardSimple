@@ -191,7 +191,7 @@ func ScanIntoID(id *id.ID) *scanID {
 	return &scanID{result: id}
 }
 
-func ScanIntoTime(t **time.Time) ScanFunc[*time.Time] {
+func ScanIntoTime(t *time.Time) ScanFunc[*time.Time] {
 	return func(rs RowScanner) (*time.Time, error) {
 		var scannedTime sql.NullTime
 		if err := rs.Scan(&scannedTime); err != nil {
@@ -200,12 +200,15 @@ func ScanIntoTime(t **time.Time) ScanFunc[*time.Time] {
 		if !scannedTime.Valid {
 			return nil, nil
 		}
-		*t = &scannedTime.Time
-		return *t, nil
+		if t == nil {
+			t = new(time.Time)
+		}
+		*t = scannedTime.Time
+		return t, nil
 	}
 }
 
-func ScanIntoFloat64(f **float64) ScanFunc[*float64] {
+func ScanIntoFloat64(f *float64) ScanFunc[*float64] {
 	return func(rs RowScanner) (*float64, error) {
 		var scannedFloat sql.NullFloat64
 		if err := rs.Scan(&scannedFloat); err != nil {
@@ -214,8 +217,11 @@ func ScanIntoFloat64(f **float64) ScanFunc[*float64] {
 		if !scannedFloat.Valid {
 			return nil, nil
 		}
-		*f = &scannedFloat.Float64
-		return *f, nil
+		if f == nil {
+			f = new(float64)
+		}
+		*f = scannedFloat.Float64
+		return f, nil
 	}
 }
 

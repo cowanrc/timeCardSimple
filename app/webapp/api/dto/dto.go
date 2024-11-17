@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"timeCardSimple/app/domain/employee"
 	"timeCardSimple/app/domain/id"
+	"timeCardSimple/app/domain/timecard"
 )
 
 var ErrUnknownType = errors.New("dto: unknown type to marshal")
@@ -28,6 +29,8 @@ func init() {
 
 		reflect.TypeOf([]*employee.Employee{}): TransformerFunc(Employees),
 		reflect.TypeOf(&employee.Employee{}):   TransformerFunc(Employee),
+
+		reflect.TypeOf(&timecard.Timecard{}): TransformerFunc(Timecard),
 	}
 
 }

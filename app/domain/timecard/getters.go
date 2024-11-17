@@ -21,6 +21,18 @@ func (tc *Timecard) EndTime() *time.Time {
 	return tc.options.EndTime
 }
 
+func (tc *Timecard) Duration() *float64 {
+	return tc.options.Duration
+}
+
+func (tc *Timecard) WeeklyStartDate() *time.Time {
+	return tc.options.WeekStartDate
+}
+
+func (tc *Timecard) BiWeeklyPeriodStart() *time.Time {
+	return tc.options.BiWeeklyPeriodStart
+}
+
 func (tc *Timecard) CreatedAt() time.Time {
 	return tc.options.CreatedAt
 }

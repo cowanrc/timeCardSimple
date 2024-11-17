@@ -8,8 +8,9 @@ import (
 	"timeCardSimple/app/domain/id"
 	"timeCardSimple/app/domain/logger"
 	"timeCardSimple/app/domain/timecard"
+	"timeCardSimple/app/infra/storage/domainsql/timecardsql/queries"
 	"timeCardSimple/app/infra/storage/sqlrepo"
-	"timeCardSimple/app/infra/storage/timecardsql/queries"
+	"timeCardSimple/app/infra/storage/timesql"
 )
 
 type Repo struct {
@@ -81,17 +82,34 @@ func (r *Repo) ClockInEmployee(
 }
 
 func scanTimecardOptions(rs *sql.Row) (options timecard.Options, err error) {
+	var startTime, endTime, weekStartDate, biWeeklyPeriodStart timesql.NullSQLTime
+	var duration sql.NullFloat64
+
 	err = rs.Scan(
 		sqlrepo.ScanIntoID(&options.ID),
 		sqlrepo.ScanIntoID(&options.EmployeeID),
-		sqlrepo.ScanIntoTime(&options.StartTime),
-		sqlrepo.ScanIntoTime(&options.EndTime),
-		sqlrepo.ScanIntoFloat64(&options.Duration),
-		sqlrepo.ScanIntoTime(&options.WeekStartDate),
-		sqlrepo.ScanIntoTime(&options.BiWeeklyPeriodStart),
+		&startTime,
+		&endTime,
 		&options.CreatedAt,
 		&options.UpdatedAt,
+		&duration,
+		&weekStartDate,
+		&biWeeklyPeriodStart,
 	)
+	if err != nil {
+		return options, err
+	}
 
-	return
+	options.StartTime = startTime.Domain()
+	options.EndTime = endTime.Domain()
+	options.WeekStartDate = weekStartDate.Domain()
+	options.BiWeeklyPeriodStart = biWeeklyPeriodStart.Domain()
+
+	if duration.Valid {
+		options.Duration = &duration.Float64
+	} else {
+		options.Duration = nil
+	}
+
+	return options, nil
 }
