@@ -9,6 +9,10 @@ const (
 	VALUES ($1, $2, $3, $4);`
 
 	// SET
-	ClockInEmployee = `UPDATE timecard SET start_time = $1, week_start_date = $2, bi_weekly_period_start = $3
-	WHERE employee_id = $4;`
+	ClockInEmployee = `UPDATE timecard 
+		SET start_time = $1,
+			week_start_date = COALESCE(week_start_date, $2),
+			bi_weekly_period_start = COALESCE(bi_weekly_period_start, $3),
+    		updated_at = NOW()	
+		WHERE employee_id = $4 AND end_time IS NULL;`
 )
