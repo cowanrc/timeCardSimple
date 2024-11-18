@@ -44,7 +44,7 @@ func (r *Repo) GetAllEmployees(ctx context.Context) ([]*employee.Employee, error
 			&options.Email,
 			&options.CreatedAt,
 			&options.UpdatedAt,
-			&options.PasswordHash,
+			// &options.PasswordHash,
 		)
 		if err != nil {
 			logger.Error("error scanning employee row", err)
@@ -125,7 +125,7 @@ func scanEmployeeOptions(rs *sql.Row) (options employee.Options, err error) {
 		&options.Email,
 		&options.CreatedAt,
 		&options.UpdatedAt,
-		&options.PasswordHash,
+		// &options.PasswordHash,
 	)
 
 	return

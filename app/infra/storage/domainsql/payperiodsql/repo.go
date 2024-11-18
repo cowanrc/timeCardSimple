@@ -9,6 +9,7 @@ import (
 	"timeCardSimple/app/domain/payperiod"
 	"timeCardSimple/app/infra/storage/domainsql/payperiodsql/queries"
 	"timeCardSimple/app/infra/storage/sqlrepo"
+	"timeCardSimple/app/infra/storage/timesql"
 )
 
 type Repo struct {
@@ -56,13 +57,22 @@ func (r *Repo) CreatePayPeriod(ctx context.Context, payPeriod *payperiod.PayPeri
 }
 
 func scanPayPeriodOptions(rs *sql.Row) (options payperiod.Options, err error) {
+	var startDate, endDate timesql.NullSQLTime
+
 	err = rs.Scan(
 		sqlrepo.ScanIntoID(&options.ID),
 		sqlrepo.ScanIntoID(&options.EmployeeID),
-		sqlrepo.ScanIntoTime(options.StartDate),
-		sqlrepo.ScanIntoTime(options.EndDate),
+		&options.StartDate,
+		&options.EndDate,
 		&options.DaysWorked,
 		&options.TotalHours,
 	)
-	return
+	if err != nil {
+		return options, err
+	}
+
+	options.StartDate = startDate.Domain()
+	options.EndDate = endDate.Domain()
+
+	return options, nil
 }

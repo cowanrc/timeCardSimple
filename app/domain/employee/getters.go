@@ -3,7 +3,6 @@ package employee
 import (
 	"time"
 	"timeCardSimple/app/domain/id"
-	"timeCardSimple/app/lib/clone"
 )
 
 // ID returns the employee ID
@@ -33,6 +32,6 @@ func (e *Employee) UpdatedAt() time.Time {
 }
 
 // PasswordHash returns the User password field.
-func (e *Employee) PasswordHash() []byte {
-	return clone.Slice(e.options.PasswordHash)
-}
+// func (e *Employee) PasswordHash() []byte {
+// 	return clone.Slice(e.options.PasswordHash)
+// }

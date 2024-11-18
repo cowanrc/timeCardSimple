@@ -4,17 +4,15 @@ import (
 	"time"
 
 	"timeCardSimple/app/domain/id"
-	"timeCardSimple/app/lib/clone"
 )
 
 type Options struct {
-	ID           id.ID
-	FirstName    string
-	LastName     string
-	Email        string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	PasswordHash []byte
+	ID        id.ID
+	FirstName string
+	LastName  string
+	Email     string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (o Options) validate() error {
@@ -45,7 +43,7 @@ func (o Options) validate() error {
 func (o Options) DeepClone() Options {
 	clonedOptions := o
 
-	clonedOptions.PasswordHash = clone.Slice(o.PasswordHash)
+	// clonedOptions.PasswordHash = clone.Slice(o.PasswordHash)
 
 	return clonedOptions
 }
