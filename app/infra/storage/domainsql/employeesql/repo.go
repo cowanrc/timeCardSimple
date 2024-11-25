@@ -125,7 +125,6 @@ func scanEmployeeOptions(rs *sql.Row) (options employee.Options, err error) {
 		&options.Email,
 		&options.CreatedAt,
 		&options.UpdatedAt,
-		// &options.PasswordHash,
 	)
 
 	return

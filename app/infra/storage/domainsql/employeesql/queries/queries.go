@@ -11,5 +11,5 @@ const (
 	VALUES($1, $2, $3, $4, $5, $6);`
 
 	// REMOVE
-	RemoveEmployee = `DELETE FROM employees WHERE id=$1`
+	RemoveEmployee = `DELETE FROM employees WHERE id = $1`
 )

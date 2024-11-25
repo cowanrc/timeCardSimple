@@ -86,14 +86,17 @@ func TestRepo_GetEmployeeByID_NotFound(t *testing.T) {
 	repo, mock := setupMockDB(t)
 	defer mock.ExpectClose()
 
+	nonExistentID := idtest.MustNew()
 	mock.ExpectQuery("SELECT (.+) FROM employees WHERE id = ?").
-		WithArgs("non-existent-id").
+		WithArgs(nonExistentID.GoString()).
 		WillReturnError(sql.ErrNoRows)
 
 	ctx := context.Background()
-	_, err := repo.GetEmployeeByID(ctx, idtest.MustNew())
+	_, err := repo.GetEmployeeByID(ctx, nonExistentID)
 	require.Error(t, err)
-	require.Contains(t, err.Error(), "not found")
+	if err != sql.ErrNoRows {
+		t.Errorf("incorrect error, received %v, expected %v", err, sql.ErrNoRows)
+	}
 }
 
 func TestRepo_AddEmployee_Ok(t *testing.T) {
