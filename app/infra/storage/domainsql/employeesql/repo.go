@@ -75,7 +75,7 @@ func (r *Repo) GetEmployeeByID(ctx context.Context, employeeID id.ID) (*employee
 	options, err := scanEmployeeOptions(row)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("employee with ID %v not found", employeeID)
+			return nil, sql.ErrNoRows
 		}
 		return nil, err
 	}
