@@ -52,7 +52,7 @@ func buildDb() (*sql.DB, error) {
 		return nil, err
 	}
 
-	db, err := sql.Open("postgres", u.String())
+	db, err := sql.Open(sqlOpenDriverName, u.String())
 	if err != nil {
 		return nil, err
 	}
